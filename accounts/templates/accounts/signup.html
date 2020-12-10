@@ -1,6 +1,34 @@
 {% extends 'ipams/base.html' %}
 {% load crispy_forms_tags %}
 
+{% block footer %}
+<script>
+$(document).ready(function() {
+
+    	$.ajax({
+			headers: { "X-CSRFToken": '{{ csrf_token }}' },
+			data: {"get_courses": "true"},
+			dataType:"json",
+			type: "post",
+			success: function(data){
+	            var courses = data["courses"];
+	            var courseInput = $("#course")[0];
+                new Tagify(courseInput, {
+	            	enforceWhitelist:true,
+	            	whitelist: courses,
+	            	dropdown:{enabled:1},
+	            	maxTags: 1
+                });
+            },
+            error: function(data){
+                alert("error");
+            }
+        });
+});
+
+</script>
+{% endblock %}
+
 {% block content %}
 <div class="container">
     <div class="row">
@@ -62,6 +90,13 @@
                 <div class="row">
                     <div class="col-12">
                         {{ form.password2|as_crispy_field }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div id="courses">
+                            <label>Course:</label> <input placeholder="search course" type="text" class="form-control" id="course" name="course">
+                        </div>
                     </div>
                 </div>
                 <div class="row">

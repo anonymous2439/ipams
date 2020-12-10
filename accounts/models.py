@@ -52,7 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class Course(models.Model):
-	name = models.CharField(max_length=30, unique=True)
+	name = models.CharField(max_length=100, unique=True)
 	date_created = models.DateTimeField(auto_now_add=True)
 
 

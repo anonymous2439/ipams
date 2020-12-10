@@ -6,7 +6,7 @@ from django.views import View
 from django.shortcuts import redirect
 from . import forms
 from .decorators import authorized_roles
-from .models import User, UserRole, RoleRequest
+from .models import User, UserRole, RoleRequest, Course
 from django.db.models import Q
 
 
@@ -47,29 +47,38 @@ class SignupView(View):
         return render(request, self.name, {'form': form, 'hide_profile': True})
 
     def post(self, request):
-        form = forms.SignupForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            password = form.cleaned_password()
-            if password:
-                user.set_password(password)
-                user.role = UserRole.objects.get(pk=1)
-                user.save()
-                RoleRequest(user=user, role=UserRole.objects.get(pk=int(request.POST.get('role', 0)))).save()
-                login(request, user)
-                return redirect('/')
-            error_message = 'Password did not match!'
-        else:
-            if not form.cleaned_data.get('username'):
-                error_message = 'Username not available'
-            elif not form.cleaned_data.get('email'):
-                error_message = 'That E-mail is already in used by another user'
+        if request.is_ajax():
+            if request.POST.get("get_courses", 'false') == 'true':
+                courses = []
+                for course in Course.objects.all():
+                    courses.append({'value': course.name, 'id': course.pk})
+                return JsonResponse({'courses': courses})
             else:
-                error_message = 'Invalid form'
-        if error_message:
-            messages.error(request, error_message)
-        form = forms.RegistrationForm()
-        return render(request, self.name, {'form': form, 'hide_profile': True})
+                return JsonResponse({'success': 'false'})
+        else:
+            form = forms.SignupForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                password = form.cleaned_password()
+                if password:
+                    user.set_password(password)
+                    user.role = UserRole.objects.get(pk=1)
+                    user.save()
+                    RoleRequest(user=user, role=UserRole.objects.get(pk=int(request.POST.get('role', 0)))).save()
+                    login(request, user)
+                    return redirect('/')
+                error_message = 'Password did not match!'
+            else:
+                if not form.cleaned_data.get('username'):
+                    error_message = 'Username not available'
+                elif not form.cleaned_data.get('email'):
+                    error_message = 'That E-mail is already in used by another user'
+                else:
+                    error_message = 'Invalid form'
+            if error_message:
+                messages.error(request, error_message)
+            form = forms.RegistrationForm()
+            return render(request, self.name, {'form': form, 'hide_profile': True})
 
 
 def login_user(request):
@@ -124,10 +133,13 @@ def save_profile(request):
     if request.method == 'POST':
         user = request.user
         first_name = request.POST.get('first_name')
+        middle_name = request.POST.get('middle_name')
         last_name = request.POST.get('last_name')
         contact_no = request.POST.get('contact_no')
         if first_name != '':
             user.first_name = first_name
+        if middle_name != '':
+            user.middle_name = middle_name
         if last_name != '':
             user.last_name = last_name
         if contact_no != '':

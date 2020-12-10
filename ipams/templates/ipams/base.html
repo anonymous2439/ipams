@@ -314,13 +314,16 @@
                                                 <label>Name:</label>
                                             </div>
                                             <div class="col-9">
-                                                <input class="form-control profile-input" value="{{ user.first_name }} {{ user.last_name }}" id="full_name" readonly>
+                                                <input class="form-control profile-input" value="{{ user.first_name }} {{ user.middle_name }} {{ user.last_name }}" id="full_name" readonly>
                                                 <div class="row" style="display:none" id="multi-name-row">
-                                                    <div class="col-6">
-                                                        <input class="form-control profile-input" placeholder="First Name" value="{{ user.first_name }}" id="first_name" name="first_name">
+                                                    <div class="col-4">
+                                                        <input class="form-control profile-input" placeholder="First" value="{{ user.first_name }}" id="first_name" name="first_name">
                                                     </div>
-                                                    <div class="col-6">
-                                                        <input class="form-control profile-input" placeholder="Last Name" value="{{ user.last_name }}" id="last_name" name="last_name">
+                                                    <div class="col-4">
+                                                        <input class="form-control profile-input" placeholder="Middle" value="{{ user.middle_name }}" id="middle_name" name="middle_name">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <input class="form-control profile-input" placeholder="Last" value="{{ user.last_name }}" id="last_name" name="last_name">
                                                     </div>
                                                 </div>
                                             </div>
