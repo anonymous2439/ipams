@@ -1,3 +1,5 @@
+import json
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout as auth_logout
 from django.http import JsonResponse
@@ -6,7 +8,7 @@ from django.views import View
 from django.shortcuts import redirect
 from . import forms
 from .decorators import authorized_roles
-from .models import User, UserRole, RoleRequest, Course
+from .models import User, UserRole, RoleRequest, Course, Student
 from django.db.models import Q
 
 
@@ -64,6 +66,10 @@ class SignupView(View):
                     user.set_password(password)
                     user.role = UserRole.objects.get(pk=1)
                     user.save()
+                    if request.POST.get('role', '0') == '2':
+                        print('role is 2')
+                        course = json.loads(request.POST.get('course'))
+                        Student(user=user, course=Course.objects.get(pk=int(course[0]['id']))).save()
                     RoleRequest(user=user, role=UserRole.objects.get(pk=int(request.POST.get('role', 0)))).save()
                     login(request, user)
                     return redirect('/')

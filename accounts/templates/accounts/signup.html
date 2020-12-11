@@ -24,6 +24,13 @@ $(document).ready(function() {
                 alert("error");
             }
         });
+
+        $("#role1").on("click", function(){
+            $("#courses").hide();
+        });
+        $("#role2").on("click", function(){
+            $("#courses").show();
+        });
 });
 
 </script>
@@ -53,6 +60,14 @@ $(document).ready(function() {
                             <label class="form-check-label" for="role2">
                                 Student
                             </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-12">
+                        <div id="courses" style="display:none;">
+                            <label>Course:</label> <input placeholder="search course" type="text" class="form-control" id="course" name="course">
                         </div>
                     </div>
                 </div>
@@ -90,13 +105,6 @@ $(document).ready(function() {
                 <div class="row">
                     <div class="col-12">
                         {{ form.password2|as_crispy_field }}
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-12">
-                        <div id="courses">
-                            <label>Course:</label> <input placeholder="search course" type="text" class="form-control" id="course" name="course">
-                        </div>
                     </div>
                 </div>
                 <div class="row">
