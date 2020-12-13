@@ -336,6 +336,16 @@
                                                 <input class="form-control profile-input" value="{{ user.email }}" readonly>
                                             </div>
                                         </div>
+                                        {% if user.role.pk == 2 %}
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <label>Course</label>
+                                            </div>
+                                            <div class="col-9">
+                                                <input class="form-control" value="{{ user.student.course.name }}" readonly>
+                                            </div>
+                                        </div>
+                                        {% endif %}
                                         <div class="row profile-row">
                                             <div class="col-3">
                                                 <label>Contact:</label>

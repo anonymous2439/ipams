@@ -85,7 +85,7 @@ class Record(models.Model):
 
 class ResearchRecord(models.Model):
     proposal = models.ForeignKey(Record, on_delete=models.CASCADE, related_name='proposal')
-    research = models.ForeignKey(Record, on_delete=models.CASCADE, related_name='research', null=True, blank=True)
+    research = models.ForeignKey(Record, on_delete=models.SET_NULL, related_name='research', null=True, blank=True)
 
 
 class CheckedRecord(models.Model):

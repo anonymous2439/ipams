@@ -960,6 +960,7 @@ class AddResearch(View):
     def post(self, request, research_record_id):
         error_messages = []
         record_form = forms.RecordForm(request.POST, request.FILES)
+        proposal_record = ResearchRecord.objects.get(pk=research_record_id).proposal
         if request.is_ajax():
             if request.POST.get("get_user_tags", 'false') == 'true':
                 users = []
@@ -1040,8 +1041,10 @@ class AddResearch(View):
             'conference_levels': self.conference_levels,
             'budget_types': self.budget_types,
             'collaboration_types': self.collaboration_types,
-            'record_form': self.record_form,
+            'record_form': record_form,
             'publication_form': self.publication_form,
+            'proposal_record': proposal_record,
+            'research_record_id': research_record_id,
             'error_messages': error_messages,
         }
         return render(request, self.name, context)
