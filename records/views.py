@@ -921,7 +921,7 @@ class Add(View):
             'conference_levels': self.conference_levels,
             'budget_types': self.budget_types,
             'collaboration_types': self.collaboration_types,
-            'record_form': self.record_form,
+            'record_form': record_form,
             'publication_form': self.publication_form,
             'error_messages': error_messages,
         }
