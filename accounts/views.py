@@ -83,7 +83,7 @@ class SignupView(View):
                     error_message = 'Invalid form'
             if error_message:
                 messages.error(request, error_message)
-            form = forms.RegistrationForm()
+            form = forms.RegistrationForm(request.POST)
             return render(request, self.name, {'form': form, 'hide_profile': True})
 
 
