@@ -250,7 +250,7 @@
                             <div class="dropdown-divider"></div>
                             <h6 class="dropdown-header"><i class="fa fa-book"></i> Records</h6>
                             <a class="dropdown-item" href="{% url 'records-myrecords' %}">My records</a>
-                            {% if user.role.id > 2 %}
+                            {% if user.role.id > 2 and user.role.id < 6 %}
                             <a class="dropdown-item" href="{% url 'records-pending' %}">Pending</a>
                             <a class="dropdown-item" href="{% url 'records-approved' %}">Approved</a>
                             <a class="dropdown-item" href="{% url 'records-declined' %}">Declined</a>

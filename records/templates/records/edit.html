@@ -113,7 +113,29 @@
 		});
 
 		$("#btn-record-submit").on("click",function(){
-			$("#form-record").submit();
+    		$.ajax({
+				headers: { "X-CSRFToken": '{{ csrf_token }}' },
+				data: new FormData($('#form-record').get(0)),
+				dataType:"json",
+				cache: false,
+				processData: false,
+        		contentType: false,
+				type: "post",
+				success: function(data){
+					Swal.fire({
+					  title: 'Record Updated!',
+					  text: "The record has been successfully updated!",
+					  type: 'success',
+					  confirmButtonColor: '#3085d6',
+					  confirmButtonText: 'Yes'
+					}).then((result) => {
+						window.location.replace("{% url 'records-myrecords-view' record_id=record.pk %}");
+					})
+				},
+				error: function(data){
+					alert("error");
+				}
+			});
 		});
 
 		$(document).ready(function(){

@@ -595,38 +595,16 @@ section with the new entry.</li>
 						</button>
 					</div>
 					<div class="modal-body">
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="role-radio" id="guest-radio" value="1" checked>
-						  <label class="form-check-label" for="guest-radio">
-						    Guest
-						  </label>
-						</div>
-						<div class="form-check">
-						  <input class="form-check-input" type="radio" name="role-radio" id="student-radio" value="2">
-						  <label class="form-check-label" for="student-radio">
-						    Student
-						  </label>
-						</div>
-						{% if user.role.id > 3 %}
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="role-radio" id="adviser-radio" value="3">
-							<label class="form-check-label" for="adviser-radio">
-								Adviser
-							</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="role-radio" id="ktto-radio" value="4">
-							<label class="form-check-label" for="ktto-radio">
-								KTTO
-							</label>
-						</div>
-						<div class="form-check">
-							<input class="form-check-input" type="radio" name="role-radio" id="rdco-radio" value="5">
-							<label class="form-check-label" for="rdco-radio">
-								RDCO
-							</label>
-						</div>
-						{% endif %}
+						{% for user_role in user_roles %}
+							{% if user_role.pk < user.role.pk or user.role.pk > 3 %}
+							<div class="form-check">
+								<input class="form-check-input" type="radio" name="role-radio" id="{{ user_role.name }}-radio" value="{{ user_role.pk }}" {% if user_role.pk == 1 %} checked {% endif %}>
+								<label class="form-check-label" for="{{ user_role }}-radio">
+									{{ user_role.name }}
+								</label>
+							</div>
+							{% endif %}
+						{% endfor %}
 					</div>
 					<div class="modal-footer">
 					  	<input type="hidden" value="true" name="role-change"/>

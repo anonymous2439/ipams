@@ -11,7 +11,6 @@
 			var classificationPerYear;
 			$.ajax({
 			    "headers": { "X-CSRFToken": '{{ csrf_token }}' },
-			    "url": "{% url 'records-index' %}",
 			    "type": "post",
 			    "data": {"graphs": true},
 			    "success": function(response){
@@ -132,6 +131,24 @@
 					      }
 					    }
 					});
+					$("#doc0").html("<th>Patent</th>");
+					$("#doc1").html("<th>Utility Model</th>");
+					$("#doc2").html("<th>Industrial Design</th>");
+					$("#doc3").html("<th>Trademark</th>");
+					$("#doc4").html("<th>Copyright</th>");
+					for(var i=0; i<response.for_application.length; i++)
+					    $("#doc"+i).append("<td>"+response.for_application[i]+"</td>");
+					for(var i=0; i<response.reviewed.length; i++)
+					    $("#doc"+i).append("<td>"+response.reviewed[i]+"</td>");
+					for(var i=0; i<response.filed.length; i++)
+					    $("#doc"+i).append("<td>"+response.filed[i]+"</td>");
+					for(var i=0; i<response.approved.length; i++)
+					    $("#doc"+i).append("<td>"+response.approved[i]+"</td>");
+					for(var i=0; i<response.disapproved.length; i++)
+					    $("#doc"+i).append("<td>"+response.disapproved[i]+"</td>");
+					$("#adviser-pending-count").html(response.adviser_pending_count);
+					$("#ktto-pending-count").html(response.ktto_pending_count);
+					$("#rdco-pending-count").html(response.rdco_pending_count);
 			    },
 			    "error": function(data){
 			    	alert("error");
@@ -153,8 +170,9 @@
         <div class="row">
             <div class="col-sm-6">
                 <h2 style="margin-top:20px; margin-bottom:20px;">Dashboard</h2>
-                <a>Manage Records</a> |
-                <a href="{% url 'records-manage-documents' %}">Manage Documents</a>
+                <a href="{% url 'records-manage-records' %}">Manage Records</a> |
+                <a href="{% url 'records-manage-documents' %}">Manage Documents</a> |
+                <a href="{% url 'accounts-logs' %}">Logs</a>
             </div>
             <div class="col-sm-6 d-flex justify-content-end">
                 <div style="margin-top:20px; margin-bottom:20px;">
@@ -190,20 +208,15 @@
                                     </tr>
                                 </thead>
                                 <tbody style="font-size:12px;">
-                                    <tr>
-                                        <th>Patent</th>
+                                    <tr id="doc0">
                                     </tr>
-                                    <tr>
-                                        <th>Utility Model</th>
+                                    <tr id="doc1">
                                     </tr>
-                                    <tr>
-                                        <th>Industrial Design</th>
+                                    <tr id="doc2">
                                     </tr>
-                                    <tr>
-                                        <th>Trademark</th>
+                                    <tr id="doc3">
                                     </tr>
-                                    <tr>
-                                        <th>Copyright</th>
+                                    <tr id="doc4">
                                     </tr>
                                 </tbody>
                             </table>
@@ -220,9 +233,9 @@
                                 </div>
                             </div>
                             <div class="row" style="padding: 0px 5px 0px 5px;">
-                                <div class="col">0</div>
-                                <div class="col">0</div>
-                                <div class="col">0</div>
+                                <div class="col" id="adviser-pending-count">0</div>
+                                <div class="col" id="ktto-pending-count">0</div>
+                                <div class="col" id="rdco-pending-count">0</div>
                             </div>
                         </div>
                     </div>

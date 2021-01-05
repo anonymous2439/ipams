@@ -115,8 +115,12 @@
 		$("#btn-record-submit").on("click",function(){
 			var valid = false;
 			year_max = new Date().getFullYear()+1;
-			year_accomplished = parseInt($("#id_year_accomplished").val(), 10);
-			if(year_accomplished>0 && year_accomplished<=year_max)
+			if($("#id_year_accomplished").val()!=""){
+				year_accomplished = parseInt($("#id_year_accomplished").val(), 10);
+				if(year_accomplished>0 && year_accomplished<=year_max)
+					valid = true;
+			}
+			else
 				valid = true;
 			if(valid)
 				$("#form-record").submit();
@@ -133,15 +137,6 @@
 			});
 		});
 
-
-		{% for error in error_messages %}
-			Swal.fire({
-			  type: 'warning',
-			  title: '{{ error.title }}!',
-			  html: '{{ error.body }}',
-			  showConfirmButton: true,
-			});
-		{% endfor %}
 	</script>
 <script type="text/javascript">
 

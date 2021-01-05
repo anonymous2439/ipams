@@ -100,6 +100,21 @@ def insert_data(apps, schema_editor):
         Upload(name='Community Extension', record_type=RecordType.objects.get(pk=3)),
         Upload(name='Publication/Conference Presentation/Both', record_type=RecordType.objects.get(pk=3)),
         Upload(name='Release Form', record_type=RecordType.objects.get(pk=3)),
+        Upload(name='Patent', record_type=RecordType.objects.get(pk=1)),
+        Upload(name='Utility Model', record_type=RecordType.objects.get(pk=1)),
+        Upload(name='Industrial Design', record_type=RecordType.objects.get(pk=1)),
+        Upload(name='Trademark', record_type=RecordType.objects.get(pk=1)),
+        Upload(name='Copyright', record_type=RecordType.objects.get(pk=1)),
+        Upload(name='Patent', record_type=RecordType.objects.get(pk=2)),
+        Upload(name='Utility Model', record_type=RecordType.objects.get(pk=2)),
+        Upload(name='Industrial Design', record_type=RecordType.objects.get(pk=2)),
+        Upload(name='Trademark', record_type=RecordType.objects.get(pk=2)),
+        Upload(name='Copyright', record_type=RecordType.objects.get(pk=2)),
+        Upload(name='Patent', record_type=RecordType.objects.get(pk=3)),
+        Upload(name='Utility Model', record_type=RecordType.objects.get(pk=3)),
+        Upload(name='Industrial Design', record_type=RecordType.objects.get(pk=3)),
+        Upload(name='Trademark', record_type=RecordType.objects.get(pk=3)),
+        Upload(name='Copyright', record_type=RecordType.objects.get(pk=3)),
     ])
 
     RecordUploadStatus.objects.bulk_create([

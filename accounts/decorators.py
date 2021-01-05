@@ -28,7 +28,7 @@ def authorized_record_user():
             records = Record.objects.filter(pk__in=Subquery(checked_records.values('record_id')))
             record = Record.objects.get(pk=record_id)
             user_records = UserRecord.objects.filter(record=record, user=request.user)
-            if len(user_records) == 1 or request.user.role.name in ['KTTO', 'RDCO'] or record in records:
+            if len(user_records) == 1 or request.user.role.name in ['KTTO', 'RDCO', 'ITSO', 'TBI'] or record in records:
                 return view_func(request, record_id, *args, **kwargs)
             return render(request, 'accounts/unauthorized_user.html')
         return wrapper_func

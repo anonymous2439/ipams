@@ -11,6 +11,8 @@ def insert_data(apps, schema_editor):
         UserRole(name='Adviser'),
         UserRole(name='KTTO'),
         UserRole(name='RDCO'),
+        UserRole(name='ITSO'),
+        UserRole(name='TBI'),
     ])
 
 

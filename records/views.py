@@ -1,3 +1,4 @@
+import datetime
 import json
 import mimetypes
 
@@ -7,11 +8,12 @@ from django.db import DataError, connection
 from django.db.models import Count, Subquery, F, Q, Sum
 from django.forms import modelformset_factory
 from django.shortcuts import render
+from django.utils import timezone
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 
 from accounts.decorators import authorized_roles, authorized_record_user
-from accounts.models import User, UserRole, UserRecord, RoleRequest
+from accounts.models import User, UserRole, UserRecord, RoleRequest, Log
 from .forms import AssessmentForm, CheckedRecordForm
 from .models import Record, AuthorRole, Classification, PSCEDClassification, ConferenceLevel, BudgetType, \
     CollaborationType, Author, Conference, PublicationLevel, Publication, Budget, Collaboration, CheckedRecord, Upload, \
@@ -29,15 +31,50 @@ from accounts.forms import LoginForm
 FILE_LENGTH = 5242880
 
 
+def update_record_tags(request, record_id):
+    record = Record.objects.get(pk=record_id)
+    ip_is_changed = False
+    commercialization_is_changed = False
+    if request.POST.get('ip', 'false') == 'true':
+        if not record.is_ip:
+            ip_is_changed = True
+        record.is_ip = True
+    else:
+        if record.is_ip:
+            ip_is_changed = True
+        record.is_ip = False
+    if request.POST.get('commercialization', 'false') == 'true':
+        if not record.for_commercialization:
+            commercialization_is_changed = True
+        record.for_commercialization = True
+    else:
+        if record.for_commercialization:
+            commercialization_is_changed = True
+        record.for_commercialization = False
+    record.save()
+    status = 'disabled'
+    if ip_is_changed:
+        if record.is_ip:
+            status = 'enabled'
+        Log(user=request.user, action=f'ip_tag status changed to {status}, record ID: <a href="/record/{record_id}">{record_id}</a>').save()
+    if commercialization_is_changed:
+        if record.for_commercialization:
+            status = 'enabled'
+        Log(user=request.user, action=f'commercialization_tag status changed to {status}, record ID: <a href="/record/{record_id}">{record_id}</a>', date_created=timezone.now()).save()
+    return {'success': True, 'is-ip': record.is_ip, 'for-commercialization': record.for_commercialization}
+
+
 class Home(View):
     name = 'records/index.html'
-    
+
     def get(self, request):
         login_required = request.GET.get('next', False)
+        user_roles = UserRole.objects.all()
         context = {
             'login_required': login_required,
             'record_form': forms.RecordForm(),
             'login_form': LoginForm(),
+            'user_roles': user_roles,
         }
         return render(request, self.name, context)
 
@@ -46,30 +83,9 @@ class Home(View):
             data = []
             checked_records = CheckedRecord.objects.filter(status='approved', checked_by__in=Subquery(User.objects.filter(role=5).values('pk')))
             records = Record.objects.filter(pk__in=Subquery(checked_records.values('record_id')))
-            # graphs
-            if request.POST.get('graphs'):
-                basic_count = records.filter(classification=1).count()
-                applied_count = records.filter(classification=2).count()
-                psced_count = []
-                records_per_year_count = []
-                psced_per_year_count = []
-                psced_classifications = PSCEDClassification.objects.all()
-                records_per_year = records.values('year_accomplished').annotate(year_count=Count('year_accomplished')).order_by('year_accomplished')[:10]
-                for psced in psced_classifications:
-                    psced_count.append({'name': psced.name, 'count': records.filter(
-                        psced_classification=PSCEDClassification.objects.get(pk=psced.id)).count()})
-                for record_per_year in records_per_year:
-                    records_per_year_count.append({'year': record_per_year['year_accomplished'], 'count': record_per_year['year_count']})
-                with connection.cursor() as cursor:
-                    cursor.execute("SELECT year_accomplished, COUNT(year_accomplished) AS year_count FROM (SELECT DISTINCT year_accomplished, psced_classification_id FROM (select year_accomplished, psced_classification_id from records_record inner join records_checkedrecord on records_record.id=record_id inner join accounts_user on records_checkedrecord.checked_by_id=accounts_user.id where accounts_user.role_id=5 and records_checkedrecord.status='approved') as recordtbl) as tbl GROUP BY year_accomplished")
-                    rows = cursor.fetchall()
-                    for row in rows:
-                        psced_per_year_count.append({'year': row[0], 'psced_count': row[1]})
-                return JsonResponse({'success': True, 'basic': basic_count, 'applied': applied_count,
-                                     'psced_count': psced_count, 'records_per_year_count': records_per_year_count,
-                                     'psced_per_year_count': psced_per_year_count})
+
             # removing records
-            elif request.POST.get('remove'):
+            if request.POST.get('remove'):
                 titles = request.POST.getlist('titles[]')
                 for title_id in titles:
                     del_record = Record.objects.get(pk=int(title_id))
@@ -153,7 +169,7 @@ class Dashboard(View):
     name = 'records/dashboard.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['ktto', 'rdco', 'itso', 'tbi']))
     def get(self, request):
         return render(request, self.name)
 
@@ -180,9 +196,53 @@ class Dashboard(View):
                     rows = cursor.fetchall()
                     for row in rows:
                         psced_per_year_count.append({'year': row[0], 'psced_count': row[1]})
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        f"select records_record.id, records_record.title, records_checkedrecord.checked_by_id from records_record left join records_checkedrecord on records_record.id = records_checkedrecord.record_id where checked_by_id is null")
+                    rows = cursor.fetchall()
+                    adviser_pending_count = len(rows)
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 3 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4)")
+                    rows = cursor.fetchall()
+                    ktto_pending_count = len(rows)
+                with connection.cursor() as cursor:
+                    cursor.execute(
+                        "SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 5)")
+                    rows = cursor.fetchall()
+                    rdco_pending_count = len(rows)
+                record_uploads = RecordUpload.objects.all()
+
+                def get_doc_counts(docs):
+                    patent_count = 0
+                    utility_model_count = 0
+                    industrial_design_count = 0
+                    trademark_count = 0
+                    copyright_count = 0
+                    for data in docs:
+                        if data.upload.name == 'Patent':
+                            patent_count += 1
+                        if data.upload.name == 'Utility Model':
+                            utility_model_count += 1
+                        if data.upload.name == 'Industrial Design':
+                            industrial_design_count += 1
+                        if data.upload.name == 'Trademark':
+                            trademark_count += 1
+                        if data.upload.name == 'Copyright':
+                            copyright_count += 1
+                    return [patent_count, utility_model_count, industrial_design_count, trademark_count, copyright_count]
+
+                for_application = get_doc_counts(record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=1)))
+                reviewed = get_doc_counts(record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=2)))
+                filed = get_doc_counts(record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=3)))
+                approved = get_doc_counts(record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=4)))
+                disapproved = get_doc_counts(record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=5)))
                 return JsonResponse({'success': True, 'basic': basic_count, 'applied': applied_count,
                                      'psced_count': psced_count, 'records_per_year_count': records_per_year_count,
-                                     'psced_per_year_count': psced_per_year_count})
+                                     'psced_per_year_count': psced_per_year_count, 'adviser_pending_count': adviser_pending_count,
+                                     'ktto_pending_count': ktto_pending_count, 'rdco_pending_count': rdco_pending_count,
+                                     'for_application': for_application, 'reviewed': reviewed, 'filed': filed,
+                                     'approved': approved, 'disapproved': disapproved})
 
 
 class ViewManageDocuments(View):
@@ -211,9 +271,24 @@ class ViewManageDocuments(View):
                     data.append([record_upload.pk,
                                  record_upload.record.title,
                                  record_upload.upload.name,
-                                 f'{record_upload.record_upload_status.name} <button type="button" onclick="onStatusChangeClick({record_upload.pk});">Change</button>',
+                                 f'<button type="button" onclick="onStatusChangeClick({record_upload.pk}, {record_upload.record_upload_status.pk});">Change</button> {record_upload.record_upload_status.name} ',
                                  f'<a href="/download/document/{record_upload.pk}">Download</a>'],)
                 return JsonResponse({"data": data})
+
+
+class ViewManageRecords(View):
+    name = 'records/manage_records.html'
+
+    def get(self, request):
+        return render(request, self.name)
+
+    def post(self, request):
+        if request.is_ajax():
+            records = Record.objects.all()
+            data = []
+            for record in records:
+                data.append([record.pk, record.title])
+            return JsonResponse({'data': data})
 
 
 class ViewRecord(View):
@@ -257,17 +332,7 @@ class ViewRecord(View):
         if request.is_ajax():
             # updating record tags
             if request.POST.get('tags_update', 'false') == 'true':
-                record = Record.objects.get(pk=record_id)
-                if request.POST.get('ip', 'false') == 'true':
-                    record.is_ip = True
-                else:
-                    record.is_ip = False
-                if request.POST.get('commercialization', 'false') == 'true':
-                    record.for_commercialization = True
-                else:
-                    record.for_commercialization = False
-                record.save()
-                return JsonResponse({'success': True, 'is-ip': record.is_ip, 'for-commercialization': record.for_commercialization})
+                return JsonResponse(update_record_tags(request, record_id))
             # get uploaded document data
             elif request.POST.get('get_document', 'false') == 'true':
                 upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
@@ -374,17 +439,7 @@ class PendingRecordView(View):
                 return JsonResponse({'success': True})
             # updating record tags
             elif request.POST.get('tags_update', 'false') == 'true':
-                record = Record.objects.get(pk=record_id)
-                if request.POST.get('ip', 'false') == 'true':
-                    record.is_ip = True
-                else:
-                    record.is_ip = False
-                if request.POST.get('commercialization', 'false') == 'true':
-                    record.for_commercialization = True
-                else:
-                    record.for_commercialization = False
-                record.save()
-                return JsonResponse({'success': True, 'is-ip': record.is_ip, 'for-commercialization': record.for_commercialization})
+                return JsonResponse(update_record_tags(request, record_id))
             # get uploaded document data
             elif request.POST.get('get_document', 'false') == 'true':
                 upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
@@ -458,6 +513,7 @@ class MyRecordView(View):
         # 'checked_uploads_status_types': checked_uploads_status_types,
         'uploads': uploads,
         'checked_record_form': checked_record_form,
+        'is_owner': True,
     }
 
     @method_decorator(login_required(login_url='/'))
@@ -508,17 +564,7 @@ class MyRecordView(View):
                 return JsonResponse({'success': True})
             # updating record tags
             elif request.POST.get('tags_update', 'false') == 'true':
-                record = Record.objects.get(pk=record_id)
-                if request.POST.get('ip', 'false') == 'true':
-                    record.is_ip = True
-                else:
-                    record.is_ip = False
-                if request.POST.get('commercialization', 'false') == 'true':
-                    record.for_commercialization = True
-                else:
-                    record.for_commercialization = False
-                record.save()
-                return JsonResponse({'success': True, 'is-ip': record.is_ip, 'for-commercialization': record.for_commercialization})
+                return JsonResponse(update_record_tags(request, record_id))
             # get uploaded document data
             elif request.POST.get('get_document', 'false') == 'true':
                 upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
@@ -637,17 +683,7 @@ class ApprovedRecordView(View):
                 return JsonResponse({'success': True})
             # updating record tags
             elif request.POST.get('tags_update', 'false') == 'true':
-                record = Record.objects.get(pk=record_id)
-                if request.POST.get('ip', 'false') == 'true':
-                    record.is_ip = True
-                else:
-                    record.is_ip = False
-                if request.POST.get('commercialization', 'false') == 'true':
-                    record.for_commercialization = True
-                else:
-                    record.for_commercialization = False
-                record.save()
-                return JsonResponse({'success': True, 'is-ip': record.is_ip, 'for-commercialization': record.for_commercialization})
+                return JsonResponse(update_record_tags(request, record_id))
             # get uploaded document data
             elif request.POST.get('get_document', 'false') == 'true':
                 upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
@@ -823,7 +859,7 @@ class Add(View):
     publication_form = forms.PublicationForm()
     uploads = Upload.objects.all()
 
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     @method_decorator(login_required(login_url='/'))
     def get(self, request):
         context = {
@@ -906,16 +942,14 @@ class Add(View):
                 for i, collaboration_type in enumerate(collaboration_types):
                     Collaboration(collaboration_type=CollaborationType.objects.get(pk=collaboration_types[i]),
                                   industry=industries[i], institution=institutions[i], record=record).save()
+                messages.success(request, 'Record submitted!')
                 return redirect('records-index')
             elif not file_is_valid:
-                error = {'title': 'Unable to save record',
-                         'body': 'The file cannot be more than 5 MB'}
-                error_messages.append(error)
+                messages.error(request, 'The file size must not be more than 5MB')
             else:
-                error = {'title': 'Unable to save record', 'body': 'A record with the same record information already exists'}
-                error_messages.append(error)
+                messages.error(request, 'A record with the same record information already exists')
         else:
-            error_messages.append({'title': 'Unable to save record', 'body': 'You must fill-in all the required fields'})
+            messages.error(request, 'You must fill-in all the required fields')
         context = {
             'author_roles': self.author_roles,
             'conference_levels': self.conference_levels,
@@ -939,7 +973,7 @@ class AddResearch(View):
     publication_form = forms.PublicationForm()
     uploads = Upload.objects.all()
 
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     @method_decorator(login_required(login_url='/'))
     def get(self, request, research_record_id):
         proposal_record = ResearchRecord.objects.get(pk=research_record_id).proposal
@@ -1061,7 +1095,7 @@ class Edit(View):
     publication_form = forms.PublicationForm()
     uploads = Upload.objects.all()
 
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     @method_decorator(login_required(login_url='/'))
     def get(self, request, record_id):
         record = Record.objects.get(pk=record_id)
@@ -1100,14 +1134,14 @@ class Edit(View):
                 for user in User.objects.all():
                     users.append({'value': user.username, 'id': user.pk})
                 return JsonResponse({'users': users})
-        if record_form.is_valid() and not request.is_ajax():
+        if record_form.is_valid():
             record = record_form.save(commit=False)
             if record is None:
                 record = record_instance
             record.record_type = record_instance.record_type
             file_is_valid = True
             file = record_form.cleaned_data.get('abstract_file', False)
-            # check uploaded file size if valid
+            # check abstract file size if valid
             if file and file.size > FILE_LENGTH:
                 file_is_valid = False
             # saving record to database
@@ -1115,6 +1149,7 @@ class Edit(View):
                 record.save()
                 # patent search files check
                 for upload in Upload.objects.all():
+                    print(request.FILES)
                     if request.FILES.get(f'upload-{upload.pk}', None):
                         record_upload = RecordUpload.objects.filter(record=record, upload=upload).first()
                         if record_upload is not None:
@@ -1161,7 +1196,7 @@ class Edit(View):
                 for i, collaboration_type in enumerate(collaboration_types):
                     Collaboration(collaboration_type=CollaborationType.objects.get(pk=collaboration_types[i]),
                                   industry=industries[i], institution=institutions[i], record=record).save()
-                return redirect('records-index')
+                return JsonResponse({'success': 1})
             elif not file_is_valid:
                 error = {'title': 'Unable to save record',
                          'body': 'The file cannot be more than 5 MB'}
@@ -1181,7 +1216,7 @@ class Edit(View):
             'publication_form': self.publication_form,
             'error_messages': error_messages,
         }
-        return render(request, self.name, context)
+        return JsonResponse({'success': 0})
 
 
 class ParseExcel(View):
@@ -1289,7 +1324,7 @@ class ParseExcel(View):
         return redirect('records-index')
 
 
-@authorized_roles(roles=['adviser', 'ktto', 'rdco'])
+@authorized_roles(roles=['adviser', 'ktto', 'rdco', 'itso', 'tbi'])
 def download_format(request):
     fl_path = '/media'
     filename = 'data.xlsx'
@@ -1300,7 +1335,7 @@ def download_format(request):
     return response
 
 
-@authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco'])
+@authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi'])
 def download_abstract(request, record_id):
     record = Record.objects.get(pk=record_id)
     filename = record.abstract_file.name.split('/')[-1]
@@ -1310,7 +1345,7 @@ def download_abstract(request, record_id):
     return response
 
 
-@authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco'])
+@authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi'])
 def download_document(request, record_upload_id):
     record_upload = RecordUpload.objects.get(pk=record_upload_id)
     filename = record_upload.file.name.split('/')[-1]
@@ -1325,7 +1360,7 @@ class MyRecordsView(View):
     template_name = 'records/profile/my_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 
@@ -1365,14 +1400,14 @@ class PendingRecordsView(View):
     template_name = 'records/profile/pending_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 
     def post(self, request):
         if request.user.role.id == 3:
             with connection.cursor() as cursor:
-                cursor.execute(f"select records_record.id, records_record.title, records_checkedrecord.checked_by_id from records_record left join records_checkedrecord on records_record.id = records_checkedrecord.record_id where checked_by_id is NULL and records_record.adviser_id = {request.user.pk}")
+                cursor.execute(f"select records_record.id, records_record.title, records_checkedrecord.checked_by_id from records_record left join records_checkedrecord on records_record.id = records_checkedrecord.record_id where checked_by_id is null and records_record.adviser_id = {request.user.pk}")
                 rows = cursor.fetchall()
 
             data = []
@@ -1409,7 +1444,7 @@ class ApprovedRecordsView(View):
     template_name = 'records/profile/approved_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 
@@ -1428,7 +1463,7 @@ class DeclinedRecordsView(View):
     template_name = 'records/profile/declined_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 

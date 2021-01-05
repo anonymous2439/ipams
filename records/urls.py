@@ -8,6 +8,7 @@ urlpatterns = [
     path('', views.Home.as_view(), name='records-index'),
     path('dashboard', views.Dashboard.as_view(), name='records-dashboard'),
     path('dashboard/manage/documents', views.ViewManageDocuments.as_view(), name='records-manage-documents'),
+    path('dashboard/manage/records', views.ViewManageRecords.as_view(), name='records-manage-records'),
     path('record/<int:record_id>', views.ViewRecord.as_view(), name='records-view'),
     path('record/myrecords/<int:record_id>', views.MyRecordView.as_view(), name='records-myrecords-view'),
     path('record/pending/<int:record_id>', views.PendingRecordView.as_view(), name='records-pending-view'),

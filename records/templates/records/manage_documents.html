@@ -33,8 +33,9 @@
         });
 	});
 
-	function onStatusChangeClick(id){
-	    $("#record-upload-id").val(id);
+	function onStatusChangeClick(upload_id, status_id){
+	    $("#record-upload-id").val(upload_id);
+	    $("#id-status-"+status_id).attr('checked', 'checked');
 	    $("#status-change-modal").modal("show");
 	}
 </script>
@@ -93,8 +94,8 @@
                 <div class="modal-body">
                     {% for status in record_upload_status %}
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="status-radio" id="id-{{ status.name }}" value="{{ status.pk }}">
-                        <label class="form-check-label" for="id-{{ status.name }}">
+                        <input class="form-check-input" type="radio" name="status-radio" id="id-status-{{ status.pk }}" value="{{ status.pk }}">
+                        <label class="form-check-label" for="id-status-{{ status.pk }}">
                             {{ status.name }}
                         </label>
                     </div>

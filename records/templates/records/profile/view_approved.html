@@ -140,6 +140,7 @@
 				        $("#doc-link").html('<a href="/download/document/'+response['record-upload-id']+'">Download document</a>');
 				        $("#doc-comments").html(doc_comments);
 				        $("#doc-comments").append('<textarea class="form-control" id="write-comment" rows="3" placeholder="Write a comment..." style="margin-top:15px;"></textarea>');
+				        $("#doc-comments").append('<div class="d-flex justify-content-end" style="margin-top:10px"><button type="button" class="btn base-btn base-bg-primary" id="btn-uploads-post">Post</button></div>');
 				    }
 				    else{
 				        $("#doc-title").html(""+response["doc-title"]);

@@ -8,7 +8,7 @@ from django.views import View
 from django.shortcuts import redirect
 from . import forms
 from .decorators import authorized_roles
-from .models import User, UserRole, RoleRequest, Course, Student
+from .models import User, UserRole, RoleRequest, Course, Student, Log
 from django.db.models import Q
 
 
@@ -87,6 +87,21 @@ class SignupView(View):
             return render(request, self.name, {'form': form, 'hide_profile': True})
 
 
+class LogsView(View):
+    name = 'accounts/logs_view.html'
+
+    def get(self, request):
+        return render(request, self.name)
+
+    def post(self, request):
+        if request.is_ajax():
+            data = []
+            logs = Log.objects.all()
+            for log in logs:
+                data.append([log.pk, log.user.username, log.action, log.date_created.strftime("%Y-%m-%d %H:%M:%S")])
+            return JsonResponse({'data': data})
+
+
 def login_user(request):
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)
@@ -110,7 +125,7 @@ def logout(request):
     return redirect('/')
 
 
-@authorized_roles(roles=['adviser', 'ktto', 'rdco'])
+@authorized_roles(roles=['adviser', 'ktto', 'rdco', 'itso', 'tbi'])
 def get_all_accounts(request):
     if request.method == 'POST':
         accounts = None
