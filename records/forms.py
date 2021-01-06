@@ -17,11 +17,11 @@ class RecordForm(forms.ModelForm):
         year_accomplished = self.cleaned_data.get('year_accomplished')
         classification = self.cleaned_data.get('classification')
         psced_classification = self.cleaned_data.get('psced_classification')
-        abstract = self.cleaned_data.get('abstract')
+        abstract = self.cleaned_data.get('abstract', None)
         record_len = len(Record.objects.filter(title=title, year_accomplished=year_accomplished, abstract=abstract,
                                                classification=classification,
                                                psced_classification=psced_classification))
-        if record_len == 0:
+        if record_len == 0 or abstract is not None:
             m = super(RecordForm, self).save(commit=False)
             if commit:
                 m.save()

@@ -75,6 +75,7 @@ class Record(models.Model):
     abstract_file = models.FileField(upload_to='abstract/', null=True, blank=True)
     is_ip = models.BooleanField(default=False)
     for_commercialization = models.BooleanField(default=False)
+    community_extension = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     adviser = models.ForeignKey('accounts.User', on_delete=models.DO_NOTHING, null=True, blank=True)
     record_type = models.ForeignKey(RecordType, on_delete=models.DO_NOTHING, null=True, blank=True)

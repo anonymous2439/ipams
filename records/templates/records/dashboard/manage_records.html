@@ -1,0 +1,163 @@
+{% extends 'ipams/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block footer %}
+<script>
+
+    $("#btn-filter-save").on("click", function(){
+        initRecordsTbl(true);
+    });
+    var recordsTbl;
+    function initRecordsTbl(isFiltered=false){
+        filters = {}
+        if(isFiltered){
+			recordsTbl.clear().destroy();
+			filters = {
+			    "is-filter": "1",
+			    "is-ip": $("#is-ip").val(),
+			    "for-commercialization": $("#for-commercialization").val(),
+			    "community-ext": $("#community-ext").val(),
+			    "no-tags": $("#no-tags").val(),
+			}
+        }
+	    recordsTbl = $('#tbl-records').DataTable({
+	    	"ajax":	{
+	    		headers: { "X-CSRFToken": '{{ csrf_token }}' },
+	    		dataType:"json",
+	    		data: filters,
+	    		type: "post",
+	    	},
+	    	"scrollX": true,
+	    	"responsive": true,
+	    	"order": [[ 0, "desc" ]],
+	    });
+	}
+	initRecordsTbl(false);
+
+    $("#is-ip").on("click", function(){
+        if($(this).is(":checked"))
+            $(this).val("1");
+        else
+            $(this).val("0");
+    });
+
+    $("#for-commercialization").on("click", function(){
+        if($(this).is(":checked"))
+            $(this).val("1");
+        else
+            $(this).val("0");
+    });
+
+    $("#community-ext").on("click", function(){
+        if($(this).is(":checked"))
+            $(this).val("1");
+        else
+            $(this).val("0");
+    });
+
+    $("#no-tags").on("click", function(){
+        if($(this).is(":checked")){
+            $(this).val("1");
+            $("#is-ip").attr("disabled", "true").prop("checked", false);
+            $("#for-commercialization").attr("disabled", "true").prop("checked", false);
+            $("#community-ext").attr("disabled", "true").prop("checked", false);
+        }
+        else{
+            $(this).val("0");
+            $("#is-ip").removeAttr("disabled");
+            $("#for-commercialization").removeAttr("disabled");
+            $("#community-ext").removeAttr("disabled");
+        }
+    });
+
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="background-color:#dbdbdb;">
+    <section>
+        <div class="row">
+            <div class="col-sm-6">
+                <h2 style="margin-top:20px; margin-bottom:20px;">Dashboard</h2>
+            </div>
+            <div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a href="{% url 'records-dashboard' %}" class="btn btn-warning"><i class="fa fa-arrow-left"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 d-flex justify-content-end">
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
+            </div>
+        </div>
+        <div class="row" style="margin-top:20px;">
+            <div class="col-sm-12 col-lg-12" style="background-color:white; padding:20px 10px 20px 10px;">
+                <table id="tbl-records" class="table table-striped table-bordered table-condensed" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Record</th>
+                            <th>Record Type</th>
+                            <th>Tags</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<!-- --------------------------------Modal--------------------------------------------- -->
+<div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" id="form-filter">
+                {% csrf_token %}
+                <div class="modal-header base-bg-primary">
+                    <h5 class="modal-title">Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="checkbox">
+                              <label><input name="is-ip" id="is-ip" type="checkbox" value="0" {% if is_ip %} checked {% endif %}> IP</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="checkbox">
+                                <label><input name="for-commercialization" id="for-commercialization" type="checkbox" value="0" {% if commercialization %} checked {% endif %}> For commercialization</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="checkbox">
+                                <label><input name="community-ext" id="community-ext" type="checkbox" value="0" {% if community_ext %} checked {% endif %}> Community extension</label>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="checkbox">
+                                <label><input name="no-tags" id="no-tags" type="checkbox" value="0" {% if no_tags %} checked {% endif %}> No tags</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="is_filter" value="1"/>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-filter-save" class="btn btn-primary" data-dismiss="modal">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

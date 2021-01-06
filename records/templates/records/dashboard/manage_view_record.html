@@ -2,51 +2,6 @@
 {% load crispy_forms_tags %}
 {% block footer %}
 <script>
-		var authorCount = 1;
-		var conferenceCount = 1;
-		var budgetCount = 1;
-		var collaborationCount = 1;
-
-		function removeAuthor(id=0){
-			authorCount--;
-			$("#author-"+id).remove();
-		}
-
-		function removeConference(id=0){
-			conferenceCount--;
-			$("#conference-"+id).remove();
-		}
-
-		function removeBudget(id=0){
-			budgetCount--;
-			$("#budget-"+id).remove();
-		}
-
-		function removeCollaboration(id=0){
-			collaborationCount--;
-			$("#collaboration-"+id).remove();
-		}
-
-		$("#add-author-btn").on("click",function(){
-			authorCount++;
-			$("#author-rows").append('<div class="row" id="author-'+authorCount+'"><div class="col-7"><input name="author_names[]" placeholder="Name" class="form-control" type="text"></div><div class="col-3"><select name="author_roles[]" class="form-control"> {% for author_role in author_roles %}<option value="{{ author_role.pk }}">{{ author_role.name }}</option> {% endfor %} </select></div><div class="col-2"><button class="btn btn-danger" type="button" onclick="removeAuthor('+authorCount+')">REMOVE</button></div></div>');
-		});
-
-		$("#add-conference-btn").on("click",function(){
-			conferenceCount++;
-			$("#conference-rows").append('<div class="row" id="conference-'+conferenceCount+'"><div class="col-2"><select name="conference_levels[]" class="form-control"> {% for conference_level in conference_levels %} <option value="{{ conference_level.pk }}">{{ conference_level.name }}</option> {% endfor %} </select></div><div class="col-3"><input type="text" placeholder="Title" name="conference_titles[]" class="form-control"></div><div class="col-2"><input type="date" name="conference_dates[]" class="form-control"></div><div class="col-3"><input type="text" placeholder="Venue" name="conference_venues[]" class="form-control"></div><div class="col-2"><button class="btn btn-danger" type="button" onclick="removeConference('+conferenceCount+')">REMOVE</button></div></div>');
-		});
-
-		$("#add-budget-btn").on("click",function(){
-			budgetCount++;
-			$("#budget-rows").append('<div class="row" id="budget-'+budgetCount+'"><div class="col-2"><select name="budget_types[]" class="form-control"> {% for budget_type in budget_types %} <option value="{{ budget_type.pk }}">{{ budget_type.name }}</option> {% endfor %} </select></div><div class="col-4"><input type="number" name="budget_allocations[]" placeholder="Budget Allocation" class="form-control"></div><div class="col-4"><input type="text" name="funding_sources[]" placeholder="Funding Source" class="form-control"></div><div class="col-2"><button class="btn btn-danger" type="button" onclick="removeBudget('+budgetCount+')">REMOVE</button></div></div>');
-		});
-
-		$("#add-collaboration-btn").on("click",function(){
-			collaborationCount++;
-			$("#collaboration-rows").append('<div class="row" id="collaboration-'+collaborationCount+'"><div class="col-4"><input type="text" name="industries[]" class="form-control" placeholder="Other Industry"></div><div class="col-4"><input type="text" name="institutions[]" class="form-control" placeholder="Institution"></div><div class="col-2"><select name="collaboration_types[]" class="form-control"> {% for collaboration_type in collaboration_types %} <option value="{{ collaboration_type.pk }}">{{ collaboration_type.name }}</option> {% endfor %} </select></div><div class="col-2"><button class="btn btn-danger" type="button" onclick="removeCollaboration('+collaborationCount+')">REMOVE</button></div></div>');
-		});
-
         function classificationClick(id, copy=false){
             if(copy){
                 $("#nav-item-"+id).click();
@@ -88,8 +43,8 @@
                      $.ajax({
 		    	    	"headers": { "X-CSRFToken": '{{ csrf_token }}' },
 		    	    	"type": "post",
+		    	    	"data": {"remove": "true"},
                         "success": function(data){
-                            alert("success");
                         },
                         "error": function(data){
                             alert("error");
@@ -99,7 +54,9 @@
                       'Deleted!',
                       'Your record has been deleted.',
                       'success'
-                    )
+                    ).then((result) => {
+                        window.location.replace("{% url 'records-myrecords' %}");
+                    });
                   }
                 })
             });
@@ -162,26 +119,29 @@
 		    		},
 		    	});
             });
-        });
 
+        });
 
         function checkStatusClick(role){
             if(role == 'adviser'){
-                $("#checked-status-title").html("{{ adviser_checked.status }}");
-                $("#checked-status-date").val("{{ adviser_checked.date_created }}");
-                $("#checked-status-comment").html("{{ adviser_checked.comment }}");
+                $("#checked-status-title").html("{{ adviser_checked.content.status }}");
+                $("#checked-status-checkedby").val("{{ adviser_checked.content.checked_by.username }}");
+                $("#checked-status-date").val("{{ adviser_checked.content.date_created }}");
+                $("#checked-status-comment").html("{{ adviser_checked.content.comment }}");
             }
             else if(role == 'ktto'){
-                $("#checked-status-title").html("{{ ktto_checked.status }}");
-                $("#checked-status-date").val("{{ ktto_checked.date_created }}");
-                $("#checked-status-comment").html("{{ ktto_checked.comment }}");
+                $("#checked-status-title").html("{{ ktto_checked.content.status }}");
+                $("#checked-status-checkedby").val("{{ ktto_checked.content.checked_by.username }}");
+                $("#checked-status-date").val("{{ ktto_checked.content.date_created }}");
+                $("#checked-status-comment").html("{{ ktto_checked.content.comment }}");
             }
             else if(role == 'rdco'){
-                $("#checked-status-title").html("{{ rdco_checked.status }}");
-                $("#checked-status-date").val("{{ rdco_checked.date_created }}");
-                $("#checked-status-comment").html("{{ rdco_checked.comment }}");
+                $("#checked-status-title").html("{{ rdco_checked.content.status }}");
+                $("#checked-status-checkedby").val("{{ rdco_checked.content.checked_by.username }}");
+                $("#checked-status-date").val("{{ rdco_checked.content.date_created }}");
+                $("#checked-status-comment").html("{{ rdco_checked.content.comment }}");
             }
-
+            
             $("#checked-status-modal").modal("show");
         }
 
@@ -200,6 +160,7 @@
 			                doc_comments+='<div class="card" style="background-color:#dbdbdb; margin-bottom:10px;"><div class="card-body"><p class="card-text">'+response["comments"][i]+'</p><h6 class="card-subtitle mb-2 text-muted">'+response["checked_dates"][i]+'</h6><h6 class="card-subtitle mb-2 text-muted">'+response["checked_bys"][i]+'</h6></div></div>';
 			            }
 				        $("#doc-title").html(""+response["doc-title"]);
+                        $("#doc-status").html(""+response["doc-status"]);
 				        $("#doc-link").html('<a href="/download/document/'+response['record-upload-id']+'">Download document</a>');
 				        $("#doc-comments").html(doc_comments);
 				        $("#doc-comments").append('<textarea class="form-control" id="write-comment" rows="3" placeholder="Write a comment..." style="margin-top:15px;"></textarea>');
@@ -220,7 +181,6 @@
                             data: {
                                 "post_comment": true,
                                 "comment": $("#write-comment").val(),
-                                "uploads_status_type": $("#uploads-status-type").val(),
                                 "upload_id": upload_id,
 		            		    "record_id": record_id
                             },
@@ -240,6 +200,7 @@
         }
 
 
+
         $("#btn-uploads-back").on("click", function(){
             $("#uploads").show();
             $("#uploads-title").hide();
@@ -251,20 +212,49 @@
 <div class="container">
     <div class="row">
         <div class="col-12" style="margin-top:30px; margin-bottom:30px">
-            <a href="{% url 'records-index' %}">Home</a> / {{ record.title }}
+            <a href="{% url 'records-dashboard' %}">Dashboard</a> / <a href="{% url 'dashboard-manage-records' %}">Manage Records</a> / {{ record.title }}
         </div>
     </div>
     <div class="row">
-        <div class="col-3">
-            <h4>{{ record.record_type.name }}</h4>
+        <div class="col-6">
+            <table class="table table-striped">
+                <tr>
+                    <th>Checked By</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Adviser</td>
+                    <td><a href="#" onclick="checkStatusClick('adviser');">{{ adviser_checked.status }}</a></td>
+                </tr>
+                <tr>
+                    <td>KTTO</td>
+                    <td><a href="#" onclick="checkStatusClick('ktto');">{{ ktto_checked.status }}</a></td>
+                </tr>
+                <tr>
+                    <td>RDCO</td>
+                    <td><a href="#" onclick="checkStatusClick('rdco');">{{ rdco_checked.status }}</a></td>
+                </tr>
+            </table>
         </div>
-        <div class="col-9 d-flex justify-content-end">
+        <div class="col-6">
+            <div style="float: right;">
+                {% if not role_checked and user.role.pk > 2 and user.role.pk < 6 %}
+                    <a href="#" id="btn-approve">Approve</a> |
+                    <a href="#" id="btn-decline">Decline</a> |
+                {% endif %}
+                {% if is_removable %}
+                    <a href="#" id="btn-remove">Remove</a>
+                {% endif %}
+            </div>
+            <br><b>Adviser:</b> {{ record.adviser.username }}
+            <br><b>Date Submitted:</b> {{ record.date_created }}
+            <br>
             <div id="doc-tags" style="margin-top:10px">
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check">
                     <input type="checkbox" class="form-check-input" id="ip" {% if user.role.pk < 3 %} disabled {% endif %}{% if record.is_ip %} checked {% endif %}>
                     <label class="form-check-label" for="ip">Intellectual Property</label>
                 </div>
-                <div class="form-check form-check-inline">
+                <div class="form-check form-check">
                     <input type="checkbox" class="form-check-input" id="commercialization" {% if user.role.pk < 3 %} disabled {% endif %}{% if record.for_commercialization %} checked {% endif %}>
                     <label class="form-check-label" for="commercialization">For Commercialization</label>
                 </div>
@@ -275,11 +265,20 @@
             </div>
         </div>
     </div>
-    <div class="row" style="margin-bottom:10px;">
-        <div class="col-6 d-flex justify-content-end">
-        {% if is_removable %}
-            <button type="button" id="btn-remove">remove</button>
-        {% endif %}
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end" style="margin-bottom:20px;">
+            {% if research_record %}
+                <a {% if research_record.proposal is not none %} href="{% url 'dashboard-manage-record' record_id=research_record.proposal.pk %}" {% endif %}>Proposal</a>&nbsp;|&nbsp;
+                {% if research_record.research is not none %}
+                    <a href="{% url 'dashboard-manage-record' record_id=research_record.research.pk %}">Research</a>
+                {% else %}
+                    No Research
+                {% endif %}
+            {% elif record.record_type.name == 'Project' %}
+                Project
+            {% else %}
+                This record is not yet classified
+            {% endif %}
         </div>
     </div>
     <form method="post" action="{% url 'records-add' %}" id="form-record">
@@ -342,7 +341,6 @@
                     {% include 'records/view_record/collaboration.html' %}
                 </section>
             </div>
-
             <!------------------------------------UPLOADS---------------------------------------------------->
 
             <a class="nav-item nav-link nav-main uploads col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c7" onclick="classificationClick('7',true)">Uploads</a>
@@ -355,6 +353,7 @@
                     {% include 'records/view_record/uploads_title.html' %}
                 </section>
             </div>
+
         </div>
         <div class="row" style="margin-bottom:30px">
             <div class="col-12 d-flex justify-content-end">
@@ -364,4 +363,76 @@
     </form>
 </div>
 
+
+<!-- --------------------------------Modal--------------------------------------------- -->
+<div class="modal fade" id="assessment-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-header base-bg-primary">
+                    <h5 class="modal-title" id="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                {{ checked_record_form.comment|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="status" name="status">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btn-assessment-save" class="btn btn-primary">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="checked-status-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header base-bg-primary">
+                <h5 class="modal-title" id="checked-status-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="checked-status-checkedby">Checked By: </label><input id="checked-status-checkedby" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="checked-status-date">Date Checked: </label><input id="checked-status-date" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="checked-status-comment">Comment:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea id="checked-status-comment" class="form-control" rows="6" readonly>
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

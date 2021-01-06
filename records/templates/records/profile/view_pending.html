@@ -54,6 +54,7 @@
 		    		    "tags_update": true,
 		    		    "ip": $("#ip").is(":checked"),
 		    		    "commercialization": $("#commercialization").is(":checked"),
+		    		    "community_ext": $("#community-ext").is(":checked"),
 		    		},
 		    		success: function(response){
 
@@ -72,6 +73,26 @@
 		    		    "tags_update": true,
 		    		    "ip": $("#ip").is(":checked"),
 		    		    "commercialization": $("#commercialization").is(":checked"),
+		    		    "community_ext": $("#community-ext").is(":checked"),
+		    		},
+		    		success: function(response){
+
+		    		},
+		    		error: function(response){
+		    		    alert("error");
+		    		},
+		    	});
+            });
+            $("#community-ext").on("click", function(){
+                $.ajax({
+		    		headers: { "X-CSRFToken": '{{ csrf_token }}' },
+		    		dataType:"json",
+		    		type: "post",
+		    		data: {
+		    		    "tags_update": true,
+		    		    "ip": $("#ip").is(":checked"),
+		    		    "commercialization": $("#commercialization").is(":checked"),
+		    		    "community_ext": $("#community-ext").is(":checked"),
 		    		},
 		    		success: function(response){
 
@@ -231,6 +252,10 @@
                 <div class="form-check form-check">
                     <input type="checkbox" class="form-check-input" id="commercialization" {% if user.role.pk < 3 %} disabled {% endif %}{% if record.for_commercialization %} checked {% endif %}>
                     <label class="form-check-label" for="commercialization">For Commercialization</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input type="checkbox" class="form-check-input" id="community-ext" {% if user.role.pk < 3 %} disabled {% endif %}{% if record.community_extension %} checked {% endif %}>
+                    <label class="form-check-label" for="community-ext">Community Extension</label>
                 </div>
             </div>
         </div>
