@@ -81,7 +81,6 @@ def insert_data(apps, schema_editor):
     ])
 
     Upload.objects.bulk_create([
-        Upload(name='Patent Search Report', record_type=RecordType.objects.get(pk=1)),
         Upload(name='NDA', record_type=RecordType.objects.get(pk=1)),
         Upload(name='Commercialization Initial Assessment(optional)', record_type=RecordType.objects.get(pk=1)),
         Upload(name='Community Extension Initial Assessment(optional)', record_type=RecordType.objects.get(pk=1)),
@@ -91,7 +90,6 @@ def insert_data(apps, schema_editor):
         Upload(name='Community Extension', record_type=RecordType.objects.get(pk=2)),
         Upload(name='Publication/Conference Presentation/Both', record_type=RecordType.objects.get(pk=2)),
         Upload(name='Release Form', record_type=RecordType.objects.get(pk=2)),
-        Upload(name='Patent Search Report', record_type=RecordType.objects.get(pk=3)),
         Upload(name='NDA', record_type=RecordType.objects.get(pk=3)),
         Upload(name='Commercialization Initial Assessment(optional)', record_type=RecordType.objects.get(pk=3)),
         Upload(name='Community Extension Initial Assessment(optional)', record_type=RecordType.objects.get(pk=3)),

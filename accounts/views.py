@@ -87,21 +87,6 @@ class SignupView(View):
             return render(request, self.name, {'form': form, 'hide_profile': True})
 
 
-class LogsView(View):
-    name = 'accounts/logs_view.html'
-
-    def get(self, request):
-        return render(request, self.name)
-
-    def post(self, request):
-        if request.is_ajax():
-            data = []
-            logs = Log.objects.all()
-            for log in logs:
-                data.append([log.pk, log.user.username, log.action, log.date_created.strftime("%Y-%m-%d %H:%M:%S")])
-            return JsonResponse({'data': data})
-
-
 def login_user(request):
     if request.method == 'POST':
         form = forms.LoginForm(request.POST)

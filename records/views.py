@@ -56,11 +56,11 @@ def update_record_tags(request, record_id):
     if ip_is_changed:
         if record.is_ip:
             status = 'enabled'
-        Log(user=request.user, action=f'ip_tag status changed to {status}, record ID: <a href="/record/{record_id}">{record_id}</a>').save()
+        Log(user=request.user, action=f'ip_tag status changed to \"{status}\", record ID: <a href="/dashboard/logs/record/{record_id}">#{record_id}</a>').save()
     if commercialization_is_changed:
         if record.for_commercialization:
             status = 'enabled'
-        Log(user=request.user, action=f'commercialization_tag status changed to {status}, record ID: <a href="/record/{record_id}">{record_id}</a>', date_created=timezone.now()).save()
+        Log(user=request.user, action=f'commercialization_tag status changed to \"{status}\", record ID: <a href="/dashboard/logs/record/{record_id}">#{record_id}</a>', date_created=timezone.now()).save()
     return {'success': True, 'is-ip': record.is_ip, 'for-commercialization': record.for_commercialization}
 
 
@@ -263,6 +263,7 @@ class ViewManageDocuments(View):
                 record_upload = RecordUpload.objects.get(pk=int(request.POST.get('record_upload_id', 0)))
                 record_upload.record_upload_status = RecordUploadStatus.objects.get(pk=request.POST.get('status', 0))
                 record_upload.save()
+                Log(user=request.user, action=f'{record_upload.upload.name}_document status changed to \"{record_upload.record_upload_status}\", record ID: <a href="/record/{record_upload.record.pk}">#{record_upload.record.pk}</a>').save()
                 return JsonResponse({'success': True})
             else:
                 data = []
@@ -380,7 +381,6 @@ class PendingRecordView(View):
     budget_types = BudgetType.objects.all()
     collaboration_types = CollaborationType.objects.all()
     publication_levels = PublicationLevel.objects.all()
-    # checked_uploads_status_types = CheckedUploadsStatusType.objects.all()
     uploads = Upload.objects.all()
     checked_record_form = CheckedRecordForm()
     context = {
@@ -391,7 +391,6 @@ class PendingRecordView(View):
         'budget_types': budget_types,
         'collaboration_types': collaboration_types,
         'publication_levels': publication_levels,
-        # 'checked_uploads_status_types': checked_uploads_status_types,
         'uploads': uploads,
         'checked_record_form': checked_record_form,
     }
@@ -464,7 +463,7 @@ class PendingRecordView(View):
                                          'checked_bys': checked_bys,
                                          'checked_dates': checked_dates,
                                          'record-upload-id': record_upload.pk})
-            # POSTING COMMENTS
+            # POSTING COMMENTS ON CHECKED RECORD
             elif request.POST.get('post_comment', 'false') == 'true':
                 upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
                 record = Record.objects.get(pk=request.POST.get('record_id', 0))
@@ -1476,3 +1475,134 @@ class DeclinedRecordsView(View):
                 f'<a href="/record/declined/{checked_record.record.pk}">{checked_record.record.title}</a>'
             ])
         return JsonResponse({'data': data})
+
+
+class LogsView(View):
+    name = 'records/dashboard/logs_view.html'
+
+    def get(self, request):
+        return render(request, self.name)
+
+    def post(self, request):
+        if request.is_ajax():
+            data = []
+            logs = Log.objects.all()
+            for log in logs:
+                data.append([log.pk, log.user.username, log.action, log.date_created.strftime("%Y-%m-%d %H:%M:%S")])
+            return JsonResponse({'data': data})
+
+
+class DashboardRecordView(View):
+    name = 'records/dashboard/logs_view_record.html'
+    author_roles = AuthorRole.objects.all()
+    classifications = Classification.objects.all()
+    psced_classifications = PSCEDClassification.objects.all().order_by('name')
+    conference_levels = ConferenceLevel.objects.all()
+    budget_types = BudgetType.objects.all()
+    collaboration_types = CollaborationType.objects.all()
+    publication_levels = PublicationLevel.objects.all()
+    uploads = Upload.objects.all()
+    checked_record_form = CheckedRecordForm()
+    context = {
+        'author_roles': author_roles,
+        'classifications': classifications,
+        'psced_classifications': psced_classifications,
+        'conference_levels': conference_levels,
+        'budget_types': budget_types,
+        'collaboration_types': collaboration_types,
+        'publication_levels': publication_levels,
+        'uploads': uploads,
+        'checked_record_form': checked_record_form,
+        'is_owner': True,
+    }
+
+    @method_decorator(login_required(login_url='/'))
+    @method_decorator(authorized_record_user())
+    def get(self, request, record_id):
+        checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        adviser_checked = {'status': 'pending'}
+        ktto_checked = {'status': 'pending'}
+        rdco_checked = {'status': 'pending'}
+        role_checked = False
+        record = Record.objects.get(pk=record_id)
+        research_record = ResearchRecord.objects.filter(Q(proposal=record) | Q(research=record)).first()
+        for checked_record in checked_records:
+            if checked_record.checked_by.role.id == 3:
+                adviser_checked = {'status': checked_record.status, 'content': checked_record}
+            if checked_record.checked_by.role.id == 4:
+                ktto_checked = {'status': checked_record.status, 'content': checked_record}
+            if checked_record.checked_by.role.id == 5:
+                rdco_checked = {'status': checked_record.status, 'content': checked_record}
+            if checked_record.checked_by.role.id == request.user.role.pk:
+                role_checked=True
+        self.context['adviser_checked'] = adviser_checked
+        self.context['ktto_checked'] = ktto_checked
+        self.context['rdco_checked'] = rdco_checked
+        self.context['role_checked'] = role_checked
+        self.context['record'] = record
+        self.context['is_removable'] = True
+        self.context['research_record'] = research_record
+        return render(request, self.name, self.context)
+
+    def post(self, request, record_id):
+        if request.is_ajax():
+            # removing record
+            if request.POST.get('remove', 'false') == 'true':
+                del_record = Record.objects.get(pk=record_id)
+                del_record.abstract_file.delete()
+                del_record_uploads = RecordUpload.objects.filter(record=del_record)
+                for del_record_upload in del_record_uploads:
+                    del_record_upload.file.delete()
+                del_record.delete()
+                return JsonResponse({'success': True})
+            # updating record tags
+            elif request.POST.get('tags_update', 'false') == 'true':
+                return JsonResponse(update_record_tags(request, record_id))
+            # get uploaded document data
+            elif request.POST.get('get_document', 'false') == 'true':
+                upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
+                record = Record.objects.get(pk=request.POST.get('record_id', 0))
+                record_upload = RecordUpload.objects.filter(upload=upload, record=record).first()
+                checked_uploads = CheckedUpload.objects.filter(record_upload=record_upload).order_by('-date_checked')
+                comments = []
+                checked_bys = []
+                checked_dates = []
+                for checked_upload in checked_uploads:
+                    comments.append(checked_upload.comment)
+                    checked_bys.append(checked_upload.checked_by.username)
+                    checked_dates.append(checked_upload.date_checked)
+                if record_upload is None:
+                    return JsonResponse({'success': False, 'doc-title': upload.name})
+                else:
+                    return JsonResponse({'success': True,
+                                         'doc-title': record_upload.upload.name,
+                                         'doc-status': record_upload.record_upload_status.name,
+                                         'is-ip': record_upload.is_ip,
+                                         'for-commercialization': record_upload.for_commercialization,
+                                         'comments': comments,
+                                         'checked_bys': checked_bys,
+                                         'checked_dates': checked_dates,
+                                         'record-upload-id': record_upload.pk})
+            # POSTING COMMENTS
+            elif request.POST.get('post_comment', 'false') == 'true':
+                upload = Upload.objects.get(pk=request.POST.get('upload_id', 0))
+                record = Record.objects.get(pk=request.POST.get('record_id', 0))
+                comment = request.POST.get('comment', '')
+                record_upload = RecordUpload.objects.filter(upload=upload, record=record).first()
+                CheckedUpload(comment=comment, checked_by=request.user, record_upload=record_upload).save()
+                return JsonResponse({'success': True})
+            else:
+                return JsonResponse({'success': False})
+        else:
+            # approving or declining record
+            if request.user.role.id > 2:
+                checked_record_form = CheckedRecordForm(request.POST)
+                if checked_record_form.is_valid():
+                    checked_record = checked_record_form.save(commit=False)
+                    checked_record.checked_by = request.user
+                    checked_record.record = Record.objects.get(pk=record_id)
+                    checked_record.status = request.POST.get('status')
+                    checked_record.save()
+                else:
+                    print('invalid form')
+                return redirect('records-view', record_id)

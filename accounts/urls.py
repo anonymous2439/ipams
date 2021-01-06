@@ -1,5 +1,6 @@
 from django.urls import path
 from . import views
+from records import views as record_views
 
 urlpatterns = [
     path('register/', views.RegisterView.as_view(), name='accounts-register'),
@@ -8,5 +9,4 @@ urlpatterns = [
     path('login/', views.login_user, name='accounts-login'),
     path('logout/', views.logout, name='accounts-logout'),
     path('profile/save/', views.save_profile, name='accounts-profile-save'),
-    path('dashboard/logs', views.LogsView.as_view(), name='accounts-logs'),
 ]

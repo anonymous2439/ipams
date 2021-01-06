@@ -1,0 +1,413 @@
+{% extends 'ipams/base.html' %}
+{% load crispy_forms_tags %}
+{% block footer %}
+<script>
+        function classificationClick(id, copy=false){
+            if(copy){
+                $("#nav-item-"+id).click();
+                $("#nav-item-c"+id).addClass("active");
+            }
+            else{
+                $(".nav-copy").removeClass("active").removeClass("show");
+                $(".tab-pane").removeClass("active").removeClass("show");
+                $(".nav-item").removeClass("active");
+
+                $("#nav-item-"+id).addClass("active");
+                $("#nav-item-c"+id).addClass("active");
+                $("#nav-item-c"+id).next().addClass("active").addClass("show").addClass(" animate__animated animate__fadeIn animate__faster");
+            }
+        }
+
+        $(document).ready(function(){
+            $("#btn-approve").on("click", function(){
+                $("#modal-title").html("Approve");
+                $("#status").val("approved");
+                $("#assessment-modal").modal("show");
+            });
+            $("#btn-decline").on("click", function(){
+                $("#modal-title").html("Decline");
+                $("#status").val("declined");
+                $("#assessment-modal").modal("show");
+            });
+            $("#btn-remove").on("click", function(){
+                Swal.fire({
+                  title: 'Are you sure?',
+                  text: "You won't be able to revert this!",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                  if (result.value) {
+                     $.ajax({
+		    	    	"headers": { "X-CSRFToken": '{{ csrf_token }}' },
+		    	    	"type": "post",
+		    	    	"data": {"remove": "true"},
+                        "success": function(data){
+                        },
+                        "error": function(data){
+                            alert("error");
+                        }
+		    	    });
+                    Swal.fire(
+                      'Deleted!',
+                      'Your record has been deleted.',
+                      'success'
+                    ).then((result) => {
+                        window.location.replace("{% url 'records-myrecords' %}");
+                    });
+                  }
+                })
+            });
+
+		    // updating tags when checkbox is clicked
+            $("#ip").on("click", function(){
+                $.ajax({
+		    		headers: { "X-CSRFToken": '{{ csrf_token }}' },
+		    		dataType:"json",
+		    		type: "post",
+		    		data: {
+		    		    "tags_update": true,
+		    		    "ip": $("#ip").is(":checked"),
+		    		    "commercialization": $("#commercialization").is(":checked"),
+		    		},
+		    		success: function(response){
+
+		    		},
+		    		error: function(response){
+		    		    alert("error");
+		    		},
+		    	});
+            });
+            $("#commercialization").on("click", function(){
+                $.ajax({
+		    		headers: { "X-CSRFToken": '{{ csrf_token }}' },
+		    		dataType:"json",
+		    		type: "post",
+		    		data: {
+		    		    "tags_update": true,
+		    		    "ip": $("#ip").is(":checked"),
+		    		    "commercialization": $("#commercialization").is(":checked"),
+		    		},
+		    		success: function(response){
+
+		    		},
+		    		error: function(response){
+		    		    alert("error");
+		    		},
+		    	});
+            });
+
+        });
+
+        function checkStatusClick(role){
+            if(role == 'adviser'){
+                $("#checked-status-title").html("{{ adviser_checked.content.status }}");
+                $("#checked-status-checkedby").val("{{ adviser_checked.content.checked_by.username }}");
+                $("#checked-status-date").val("{{ adviser_checked.content.date_created }}");
+                $("#checked-status-comment").html("{{ adviser_checked.content.comment }}");
+            }
+            else if(role == 'ktto'){
+                $("#checked-status-title").html("{{ ktto_checked.content.status }}");
+                $("#checked-status-checkedby").val("{{ ktto_checked.content.checked_by.username }}");
+                $("#checked-status-date").val("{{ ktto_checked.content.date_created }}");
+                $("#checked-status-comment").html("{{ ktto_checked.content.comment }}");
+            }
+            else if(role == 'rdco'){
+                $("#checked-status-title").html("{{ rdco_checked.content.status }}");
+                $("#checked-status-checkedby").val("{{ rdco_checked.content.checked_by.username }}");
+                $("#checked-status-date").val("{{ rdco_checked.content.date_created }}");
+                $("#checked-status-comment").html("{{ rdco_checked.content.comment }}");
+            }
+            
+            $("#checked-status-modal").modal("show");
+        }
+
+        function onUploadTitleClick(upload_id, record_id){
+            $.ajax({
+				headers: { "X-CSRFToken": '{{ csrf_token }}' },
+				dataType:"json",
+				type: "post",
+				data: {"get_document": "true", "upload_id": upload_id, "record_id": record_id},
+				success: function(response){
+			        $("#uploads").hide();
+			        $("#uploads-title").show();
+			        if(response["success"]){
+			            doc_comments = "";
+			            for(var i=0; i<response["checked_dates"].length; i++){
+			                doc_comments+='<div class="card" style="background-color:#dbdbdb; margin-bottom:10px;"><div class="card-body"><p class="card-text">'+response["comments"][i]+'</p><h6 class="card-subtitle mb-2 text-muted">'+response["checked_dates"][i]+'</h6><h6 class="card-subtitle mb-2 text-muted">'+response["checked_bys"][i]+'</h6></div></div>';
+			            }
+				        $("#doc-title").html(""+response["doc-title"]);
+                        $("#doc-status").html(""+response["doc-status"]);
+				        $("#doc-link").html('<a href="/download/document/'+response['record-upload-id']+'">Download document</a>');
+				        $("#doc-comments").html(doc_comments);
+				        $("#doc-comments").append('<textarea class="form-control" id="write-comment" rows="3" placeholder="Write a comment..." style="margin-top:15px;"></textarea>');
+				        $("#doc-comments").append('<div class="d-flex justify-content-end" style="margin-top:10px"><button type="button" class="btn base-btn base-bg-primary" id="btn-uploads-post">Post</button></div>');
+				    }
+				    else{
+				        $("#doc-title").html(""+response["doc-title"]);
+				        $("#doc-link").html("(document not yet uploaded)");
+				        $("#doc-comments").html("");
+				    }
+
+                    // POSTING COMMENT
+                    $("#btn-uploads-post").on("click", function(){
+                        $.ajax({
+                            headers: { "X-CSRFToken": '{{ csrf_token }}' },
+                            dataType:"json",
+                            type: "post",
+                            data: {
+                                "post_comment": true,
+                                "comment": $("#write-comment").val(),
+                                "upload_id": upload_id,
+		            		    "record_id": record_id
+                            },
+                            success: function(response){
+                                onUploadTitleClick(upload_id, record_id);
+                            },
+                            error: function(response){
+                                alert("error");
+                            },
+                        });
+                    });
+				},
+				error: function(response){
+				    alert("error");
+				},
+            });
+        }
+
+
+
+        $("#btn-uploads-back").on("click", function(){
+            $("#uploads").show();
+            $("#uploads-title").hide();
+        });
+	</script>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12" style="margin-top:30px; margin-bottom:30px">
+            <a href="{% url 'records-dashboard' %}">Dashboard</a> / <a href="{% url 'dashboard-logs' %}">Logs</a> / {{ record.title }}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6">
+            <table class="table table-striped">
+                <tr>
+                    <th>Checked By</th>
+                    <th>Status</th>
+                </tr>
+                <tr>
+                    <td>Adviser</td>
+                    <td><a href="#" onclick="checkStatusClick('adviser');">{{ adviser_checked.status }}</a></td>
+                </tr>
+                <tr>
+                    <td>KTTO</td>
+                    <td><a href="#" onclick="checkStatusClick('ktto');">{{ ktto_checked.status }}</a></td>
+                </tr>
+                <tr>
+                    <td>RDCO</td>
+                    <td><a href="#" onclick="checkStatusClick('rdco');">{{ rdco_checked.status }}</a></td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-6">
+            <div style="float: right;">
+                {% if not role_checked and user.role.pk > 2 and user.role.pk < 6 %}
+                    <a href="#" id="btn-approve">Approve</a> |
+                    <a href="#" id="btn-decline">Decline</a> |
+                {% endif %}
+                {% if is_removable %}
+                    <a href="#" id="btn-remove">Remove</a>
+                {% endif %}
+            </div>
+            <br><b>Adviser:</b> {{ record.adviser.username }}
+            <br><b>Date Submitted:</b> {{ record.date_created }}
+            <br>
+            <div id="doc-tags" style="margin-top:10px">
+                <div class="form-check form-check">
+                    <input type="checkbox" class="form-check-input" id="ip" {% if user.role.pk < 3 %} disabled {% endif %}{% if record.is_ip %} checked {% endif %}>
+                    <label class="form-check-label" for="ip">Intellectual Property</label>
+                </div>
+                <div class="form-check form-check">
+                    <input type="checkbox" class="form-check-input" id="commercialization" {% if user.role.pk < 3 %} disabled {% endif %}{% if record.for_commercialization %} checked {% endif %}>
+                    <label class="form-check-label" for="commercialization">For Commercialization</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex justify-content-end" style="margin-bottom:20px;">
+            {% if research_record %}
+                <a {% if research_record.proposal is not none %} href="{% url 'dashboard-logs-record' record_id=research_record.proposal.pk %}" {% endif %}>Proposal</a>&nbsp;|&nbsp;
+                {% if research_record.research is not none %}
+                    <a href="{% url 'dashboard-logs-record' record_id=research_record.research.pk %}">Research</a>
+                {% else %}
+                    No Research
+                {% endif %}
+            {% elif record.record_type.name == 'Project' %}
+                Project
+            {% else %}
+                This record is not yet classified
+            {% endif %}
+        </div>
+    </div>
+    <form method="post" action="{% url 'records-add' %}" id="form-record">
+        {% csrf_token %}
+        {% include 'records/record_navbar.html' %}
+        <div class="tab-content main-container" id="nav-tabContent">
+
+           <!------------------------------------TITLE AND ABSTRACT---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main title-and-abstract active col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c1" onclick="classificationClick('1', true)">Title and Abstract</a>
+            <div class="tab-pane fade show active" id="nav-title-and-abstract" role="tabpanel" style="background-color:white">
+                <div class="main-header title-and-abstract"></div>
+                <section id="title-and-abstract" class="main-content">
+                    {% include 'records/view_record/title_and_abstract.html' %}
+                </section>
+            </div>
+           <!------------------------------------AUTHORS AND CATEGORIES---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main author col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c2" onclick="classificationClick('2',true)">Authors and Categories</a>
+            <div class="tab-pane fade" id="nav-authors-and-categories" role="tabpanel">
+                <div class="main-header author"></div>
+                <section id="authors-and-categories" class="main-content">
+                    {% include 'records/view_record/authors_and_categories.html' %}
+                </section>
+            </div>
+           <!------------------------------------CONFERENCE---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main conference col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c3" onclick="classificationClick('3',true)">Conference</a>
+            <div class="tab-pane fade" id="nav-conference" role="tabpanel">
+                <div class="main-header conference"></div>
+                <section id="conference" class="main-content">
+                    {% include 'records/view_record/conference.html' %}
+                </section>
+            </div>
+           <!------------------------------------PUBLICATION---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main publication col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c4" onclick="classificationClick('4',true)">Publication</a>
+            <div class="tab-pane fade" id="nav-publication" role="tabpanel">
+                <div class="main-header publication"></div>
+                <section id="publication" class="main-content">
+                    {% include 'records/view_record/publication.html' %}
+                </section>
+            </div>
+
+           <!------------------------------------BUDGET---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main budget col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c5" onclick="classificationClick('5',true)">Budget</a>
+            <div class="tab-pane fade" id="nav-budget" role="tabpanel">
+                <div class="main-header budget"></div>
+                <section id="budget" class="main-content">
+                    {% include 'records/view_record/budget.html' %}
+                </section>
+            </div>
+           <!------------------------------------COLLABORATION---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main collaboration col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c6" onclick="classificationClick('6',true)">Collaboration</a>
+            <div class="tab-pane fade" id="nav-collaboration" role="tabpanel">
+                <div class="main-header collaboration"></div>
+                <section id="collaboration" class="main-content">
+                    {% include 'records/view_record/collaboration.html' %}
+                </section>
+            </div>
+            <!------------------------------------UPLOADS---------------------------------------------------->
+
+            <a class="nav-item nav-link nav-main uploads col-12 d-lg-none nav-copy" data-toggle="tab" href="#" id="nav-item-c7" onclick="classificationClick('7',true)">Uploads</a>
+            <div class="tab-pane fade" id="nav-uploads" role="tabpanel">
+                <div class="main-header uploads"></div>
+                <section id="uploads" class="main-content">
+                    {% include 'records/view_record/uploads.html' %}
+                </section>
+                <section id="uploads-title" class="main-content" style="display:None;">
+                    {% include 'records/view_record/uploads_title.html' %}
+                </section>
+            </div>
+
+        </div>
+        <div class="row" style="margin-bottom:30px">
+            <div class="col-12 d-flex justify-content-end">
+                <a type="button" href="{% url 'records-index' %}" class="btn btn-warning" style="margin-top: 30px" id="btn-back">Back to Records</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+
+<!-- --------------------------------Modal--------------------------------------------- -->
+<div class="modal fade" id="assessment-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-header base-bg-primary">
+                    <h5 class="modal-title" id="modal-title"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                {{ checked_record_form.comment|as_crispy_field }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" id="status" name="status">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" id="btn-assessment-save" class="btn btn-primary">Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="checked-status-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header base-bg-primary">
+                <h5 class="modal-title" id="checked-status-title"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="checked-status-checkedby">Checked By: </label><input id="checked-status-checkedby" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="checked-status-date">Date Checked: </label><input id="checked-status-date" type="text" class="form-control" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <label for="checked-status-comment">Comment:</label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <textarea id="checked-status-comment" class="form-control" rows="6" readonly>
+                            </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
