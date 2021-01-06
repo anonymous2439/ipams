@@ -67,7 +67,6 @@ class SignupView(View):
                     user.role = UserRole.objects.get(pk=1)
                     user.save()
                     if request.POST.get('role', '0') == '2':
-                        print('role is 2')
                         course = json.loads(request.POST.get('course'))
                         Student(user=user, course=Course.objects.get(pk=int(course[0]['id']))).save()
                     RoleRequest(user=user, role=UserRole.objects.get(pk=int(request.POST.get('role', 0)))).save()

@@ -1,4 +1,3 @@
-import datetime
 import json
 import mimetypes
 
@@ -6,15 +5,13 @@ from django.contrib import messages
 from django.core.exceptions import ValidationError
 from django.db import DataError, connection
 from django.db.models import Count, Subquery, F, Q, Sum
-from django.forms import modelformset_factory
 from django.shortcuts import render
-from django.utils import timezone
 from django.views import View
 from django.http import HttpResponse, JsonResponse
 
 from accounts.decorators import authorized_roles, authorized_record_user
 from accounts.models import User, UserRole, UserRecord, RoleRequest, Log
-from .forms import AssessmentForm, CheckedRecordForm
+from .forms import CheckedRecordForm
 from .models import Record, AuthorRole, Classification, PSCEDClassification, ConferenceLevel, BudgetType, \
     CollaborationType, Author, Conference, PublicationLevel, Publication, Budget, Collaboration, CheckedRecord, Upload, \
     RecordUpload, RecordType, ResearchRecord, CheckedUpload, RecordUploadStatus
@@ -936,11 +933,12 @@ class Add(View):
                 # if the record type is proposal, the record will also be saved in the research group
                 if record.record_type.pk == 1:
                     ResearchRecord(proposal=record).save()
-                # patent search files check
+                # documents search files check
                 for upload in Upload.objects.all():
-                    if request.FILES.get(f'upload-{upload.pk}', None):
-                        RecordUpload(file=request.FILES.get(f'upload-{upload.pk}', None), record=record,
-                                                     upload=upload, record_upload_status=RecordUploadStatus.objects.get(pk=1)).save()
+                    if record.record_type.pk == upload.record_type.pk:
+                        if request.FILES.get(f'upload-{upload.pk}', None):
+                            RecordUpload(file=request.FILES.get(f'upload-{upload.pk}', None), record=record,
+                                                         upload=upload, record_upload_status=RecordUploadStatus.objects.get(pk=1)).save()
                 for owner in owners:
                     UserRecord(user=User.objects.get(pk=int(owner['id'])), record=record).save()
             if record is not None and file_is_valid:
@@ -1182,17 +1180,20 @@ class Edit(View):
             # saving record to database
             else:
                 record.save()
-                # patent search files check
+                # documents search files check
                 for upload in Upload.objects.all():
-                    print(request.FILES)
                     if request.FILES.get(f'upload-{upload.pk}', None):
                         record_upload = RecordUpload.objects.filter(record=record, upload=upload).first()
                         if record_upload is not None:
-                            record_upload.file = request.FILES.get(f'upload-{upload.pk}', None)
-                            record_upload.save()
+                            if record_upload.record_upload_status.pk not in [2, 3, 5]:
+                                record_upload.file = request.FILES.get(f'upload-{upload.pk}', None)
+                                record_upload.save()
+                            else:
+                                messages.error(request, 'Cannot be updated, document has been processed')
                         else:
                             RecordUpload(file=request.FILES.get(f'upload-{upload.pk}', None), record=record,
                                                      upload=upload, record_upload_status=RecordUploadStatus.objects.get(pk=1)).save()
+
             if record is not None and file_is_valid:
                 publication_form = forms.PublicationForm(request.POST, instance=Publication.objects.get(record=record))
                 if publication_form.is_valid():
