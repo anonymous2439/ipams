@@ -22,6 +22,7 @@
 			    "for-commercialization": $("#for-commercialization").val(),
 			    "community-ext": $("#community-ext").val(),
 			    "no-tags": $("#no-tags").val(),
+			    "record-publish-status": $("input[name=record-publish-status]:checked").val(),
 			}
         }
 	    recordsTbl = $('#tbl-records').DataTable({
@@ -143,6 +144,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="container">
+                        <div class="row">
+                            <label class="radio-inline" style="margin-right:15px"><input type="radio" name="record-publish-status" value="0" checked> All </label>
+                            <label class="radio-inline" style="margin-right:15px"><input type="radio" name="record-publish-status" value="1"> Published </label>
+                            <label class="radio-inline" style="margin-right:15px"><input type="radio" name="record-publish-status" value="2"> Not Published </label>
+                        </div>
                         <div class="row">
                             <div class="checkbox">
                               <label><input name="is-ip" id="is-ip" type="checkbox" value="0" {% if is_ip %} checked {% endif %}> IP</label>

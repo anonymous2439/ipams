@@ -1,0 +1,227 @@
+{% extends 'ipams/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block footer %}
+<script>
+	var accountsTbl;
+
+	function initAccountsTbl(){
+		{% if user.role.id > 2 %}
+	    accountsTbl= $('#tbl-accounts').DataTable({
+	    	"ajax":	{
+	    		"headers": { "X-CSRFToken": '{{ csrf_token }}' },
+	    		"url": "{% url 'accounts-get-all' %}",
+	    		"type": "post",
+	    	},
+	    	"scrollX": true,
+	    	"responsive": true,
+	    	"order": [[ 1, "desc" ]],
+			"select": {
+       		    style: 'multi',
+       		    selector: 'td:first-child'
+       		},
+       		"columnDefs": [
+       		    {
+       		        "targets": [ 1 ],
+       		        "visible": false,
+       		        "searchable": false
+       		    },
+       		    {
+       		    	"targets": [0],
+       		    	"width": 20,
+       		    	"orderable": false,
+       		    	"className": 'select-checkbox',
+       		    	"targets": 0
+       		    }
+       		],
+	    });
+		{% endif %}
+	}
+
+	$("#accounts-select-all").on( "click", function(e) {
+		accountsTbl.rows({ page: 'current' }).select();
+	});
+	$("#accounts-deselect-all").on( "click", function(e) {
+		accountsTbl.rows({ page: 'current' }).deselect();
+	});
+
+//---------------------------account action button-----------------------------------
+	$("#btn-account-go").on("click", function(){
+		var accountsAction = $("#select-account-action").val();
+		var accounts = [];
+		var rows = accountsTbl.rows({"selected":true});
+           $.each(rows.data(), function () {
+		    var row = this;
+		    accounts.push(row[1]);
+		})
+		if(accounts.length>0){
+			if(accountsAction == '1'){
+				$("#accounts-role-modal").modal("show");
+				serializedAccounts = "";
+				for(var i = 0; i < accounts.length; i++){
+					serializedAccounts+="&accounts[]="+accounts[i];
+				}
+				$("#btn-role-apply").on("click", function(){
+					$.ajax({
+            			headers: { "X-CSRFToken": '{{ csrf_token }}' },
+            			url: "{% url 'records-index' %}",
+            			type: "post",
+						data: $("#form-change-role").serialize()+serializedAccounts,
+						success: function(data){
+							$("#accounts-role-modal").modal("hide");
+							accountsTbl.ajax.reload();
+							Swal.fire(
+				    		  'Roles Changed!',
+				    		  'The selected accounts roles have been changed',
+				    		  'success'
+				    		)
+						},
+						error: function(data){
+							alert("error");
+						}
+            		});
+				});
+			}
+            else if(accountsAction == '2'){
+				Swal.fire({
+				  title: 'Are you sure you want to delete the selected accounts?',
+				  text: "You won't be able to revert this!",
+				  type: 'warning',
+				  showCancelButton: true,
+				  confirmButtonColor: '#3085d6',
+				  cancelButtonColor: '#d33',
+				  confirmButtonText: 'Yes'
+				}).then((result) => {
+				  if (result.value) {
+            		$.ajax({
+            			headers: { "X-CSRFToken": '{{ csrf_token }}' },
+            			url: "{% url 'records-index' %}",
+            			type: "post",
+						data: { "accounts": accounts, "remove-accounts": true },
+						success: function(data){
+							accountsTbl.ajax.reload();
+							if(data['success']){
+								Swal.fire(
+				    			  'Deleted!',
+				    			  'The selected accounts have been deleted',
+				    			  'success'
+				    			)
+				    		}
+				    		else{
+				    			Swal.fire(
+				    			  'Error!',
+				    			  'You are trying to delete a superuser account, This cannot be done...',
+				    			  'error'
+				    			)
+				    		}
+						},
+						error: function(data){
+							alert("error");
+						}
+            		});
+				  }
+				})
+			}
+		}
+		else{
+			Swal.fire({
+			  type: 'warning',
+			  title: 'No rows selected!',
+			  html: 'You must first select an account',
+			  showConfirmButton: true,
+			})
+		}
+	});
+
+	initAccountsTbl();
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid" style="background-color:#dbdbdb;">
+    <section>
+        <div class="row">
+            <div class="col-sm-6">
+                <h2 style="margin-top:20px; margin-bottom:20px;">Dashboard</h2>
+            </div>
+            <div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <a href="{% url 'records-dashboard' %}" class="btn btn-warning"><i class="fa fa-arrow-left"></i></a>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-auto d-flex align-items-center">
+                <a id="accounts-select-all" href="#" style="margin-right:10px">SELECT ALL</a>
+                <a id="accounts-deselect-all" href="#" style="border-left: 1px solid #ccc; padding-left:10px">NONE</a>
+            </div>
+            <div class="col-lg-3">
+                <select class="form-control" id="select-account-action">
+                    <option value="0">----------</option>
+                    <option value="1">Change Role</option>
+                    <option value="2">Remove</option>
+                </select>
+            </div>
+            <div class="col-sm-12 col-lg-auto d-flex justify-content-end">
+                <button class="btn btn-primary" type="button" id="btn-account-go">Go</button>
+            </div>
+        </div>
+
+        <div class="row" style="margin-top:20px;">
+            <div class="col-sm-12 col-lg-12" style="background-color:white; padding:20px 10px 20px 10px;">
+                <table id="tbl-accounts" class="table table-striped table-bordered table-condensed" style="width:100%">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>ID</th>
+                        <th>USERNAME</th>
+                        <th>NAME(Last, First, Middle)</th>
+                        <th>ROLE</th>
+                        <th>REQUESTS</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+</div>
+
+
+<div class="modal fade" id="accounts-role-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" id="form-change-role">
+                {% csrf_token %}
+                <div class="modal-header base-bg-primary">
+                    <h5 class="modal-title">Change Role</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {% for user_role in user_roles %}
+                    {% if user_role.pk < user.role.pk or user.role.pk > 3 %}
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="role-radio" id="{{ user_role.name }}-radio" value="{{ user_role.pk }}" {% if user_role.pk == 1 %} checked {% endif %}>
+                        <label class="form-check-label" for="{{ user_role }}-radio">
+                            {{ user_role.name }}
+                        </label>
+                    </div>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" value="true" name="role-change"/>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-role-apply" class="btn btn-primary">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

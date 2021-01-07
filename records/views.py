@@ -157,12 +157,19 @@ class Home(View):
             # accounts role change
             elif request.POST.get('role-change') == 'true':
                 accounts = request.POST.getlist('accounts[]')
+                accounts_str = ''
+
                 role_id = int(request.POST.get('role-radio'))
                 for account_id in accounts:
                     user = User.objects.get(pk=int(account_id))
                     user.role = UserRole.objects.get(pk=role_id)
                     user.save()
+                    if account_id == accounts[0]:
+                        accounts_str += user.username
+                    else:
+                        accounts_str += f', {user.username}'
                     RoleRequest.objects.filter(user=user).delete()
+                Log(user=request.user, action=f'accounts: {accounts_str} account_role changed to \"{UserRole.objects.get(pk=role_id)}\" by: {request.user.username}').save()
             # setting datatable records
             for record in records:
                 data.append([
@@ -201,7 +208,7 @@ class ViewManageDocuments(View):
                 print(request.POST)
                 data = []
                 record_uploads = RecordUpload.objects.all()
-                if request.POST.get('is-filter', '0') == '1' and request.POST.get('record-upload-status', '0') is not '0':
+                if request.POST.get('is-filter', '0') == '1' and request.POST.get('record-upload-status', '0') != '0':
                     record_uploads = record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=request.POST.get('record-upload-status', '0')))
                 for record_upload in record_uploads:
                     data.append([record_upload.pk,
@@ -1648,6 +1655,8 @@ class DashboardLogsRecordView(View):
     @method_decorator(login_required(login_url='/'))
     @method_decorator(authorized_record_user())
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}
@@ -1754,7 +1763,15 @@ class ViewManageRecords(View):
                 commercialization = request.POST.get('for-commercialization', 0)
                 community_ext = request.POST.get('community-ext', 0)
                 no_tags = request.POST.get('no-tags', 0)
-                print(request.POST)
+                record_publish_status = request.POST.get('record-publish-status', 0)
+                if record_publish_status == '1':
+                    checked_records = CheckedRecord.objects.filter(status='approved', checked_by__in=Subquery(
+                        User.objects.filter(role=5).values('pk')))
+                    records = records.filter(pk__in=Subquery(checked_records.values('record_id')))
+                elif record_publish_status == '2':
+                    checked_records = CheckedRecord.objects.filter(status='approved', checked_by__in=Subquery(
+                        User.objects.filter(role=5).values('pk')))
+                    records = records.exclude(pk__in=Subquery(checked_records.values('record_id')))
                 if is_ip == '1':
                     records = records.filter(is_ip=True)
                 if commercialization == '1':
@@ -1899,3 +1916,43 @@ class DashboardManageRecord(View):
                 else:
                     print('invalid form')
                 return redirect('records-view', record_id)
+
+
+class DashboardManageAccounts(View):
+    name = 'records/dashboard/accounts_view.html'
+
+    def get(self, request):
+        user_roles = UserRole.objects.all()
+        context = {
+            'user_roles': user_roles,
+        }
+        return render(request, self.name, context)
+
+    def post(self, request):
+        if request.is_ajax():
+            # removing accounts
+            if request.POST.get('remove-accounts'):
+                accounts = request.POST.getlist('accounts[]')
+                success = False
+                for account_id in accounts:
+                    del_account = User.objects.get(pk=int(account_id))
+                    if not del_account.is_superuser:
+                        del_account.delete()
+                        success = True
+                return JsonResponse({'success': success})
+            # accounts role change
+            elif request.POST.get('role-change') == 'true':
+                accounts = request.POST.getlist('accounts[]')
+                accounts_str = ''
+
+                role_id = int(request.POST.get('role-radio'))
+                for account_id in accounts:
+                    user = User.objects.get(pk=int(account_id))
+                    user.role = UserRole.objects.get(pk=role_id)
+                    user.save()
+                    if account_id == accounts[0]:
+                        accounts_str += user.username
+                    else:
+                        accounts_str += f', {user.username}'
+                    RoleRequest.objects.filter(user=user).delete()
+                Log(user=request.user, action=f'accounts: {accounts_str} account_role changed to \"{UserRole.objects.get(pk=role_id)}\" by: {request.user.username}').save()
