@@ -78,7 +78,7 @@ class Record(models.Model):
     community_extension = models.BooleanField(default=False)
     date_created = models.DateTimeField(auto_now_add=True)
     adviser = models.ForeignKey('accounts.User', on_delete=models.DO_NOTHING, null=True, blank=True)
-    record_type = models.ForeignKey(RecordType, on_delete=models.DO_NOTHING, null=True, blank=True)
+    record_type = models.ForeignKey(RecordType, on_delete=models.DO_NOTHING, null=True, blank=True, default=3)
 
     def __str__(self):
         return self.title

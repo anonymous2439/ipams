@@ -96,16 +96,8 @@ class Home(View):
             checked_records = CheckedRecord.objects.filter(status='approved', checked_by__in=Subquery(User.objects.filter(role=5).values('pk')))
             records = Record.objects.filter(pk__in=Subquery(checked_records.values('record_id')))
 
-            # removing records
-            if request.POST.get('remove'):
-                titles = request.POST.getlist('titles[]')
-                for title_id in titles:
-                    del_record = Record.objects.get(pk=int(title_id))
-                    del_record.abstract_file.delete()
-                    del_record.delete()
-                return JsonResponse({'success': True})
             # removing accounts
-            elif request.POST.get('remove-accounts'):
+            if request.POST.get('remove-accounts'):
                 accounts = request.POST.getlist('accounts[]')
                 success = False
                 for account_id in accounts:
@@ -173,7 +165,6 @@ class Home(View):
             # setting datatable records
             for record in records:
                 data.append([
-                    '',
                     record.pk,
                     '<a href="/record/' + str(
                     record.pk) + '">' + record.title + '</a>',
@@ -1309,7 +1300,8 @@ class ParseExcel(View):
                     if record_len == 0:
                         record = Record(title=title, year_accomplished=year_accomplished,
                                         classification=Classification.objects.get(pk=classification),
-                                        psced_classification=PSCEDClassification.objects.get(pk=psced_classification))
+                                        psced_classification=PSCEDClassification.objects.get(pk=psced_classification),
+                                        record_type=RecordType.objects.get(pk=3))
                         record.save()
                         UserRecord(record=record, user=request.user).save()
                     else:
@@ -1781,6 +1773,15 @@ class ViewManageRecords(View):
                 if no_tags == '1':
                     records = records.filter(community_extension=False, is_ip=False, for_commercialization=False)
 
+            # removing records
+            elif request.POST.get('remove'):
+                titles = request.POST.getlist('titles[]')
+                for title_id in titles:
+                    del_record = Record.objects.get(pk=int(title_id))
+                    del_record.abstract_file.delete()
+                    del_record.delete()
+                return JsonResponse({'success': True})
+
             for record in records:
                 tags = ''
                 if record.is_ip:
@@ -1790,6 +1791,7 @@ class ViewManageRecords(View):
                 if record.community_extension:
                     tags += f'<div class="badge badge-secondary">Community extension</div>&nbsp;'
                 data.append([
+                    '',
                     record.pk,
                     f'<a href="/dashboard/manage/records/{record.pk}">{record.title}</a>',
                     record.record_type.name,

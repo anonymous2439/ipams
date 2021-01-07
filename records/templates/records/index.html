@@ -25,28 +25,13 @@
 				},
 				"scrollX": true,
 				"responsive": true,
-				"order": [[ 3, "desc" ], [ 2, "asc" ]],
+				"order": [[ 2, "desc" ], [ 1, "asc" ]],
 
-				{% if user.is_authenticated and user.role.id > 3 %}
-				"select": {
-					style: 'multi',
-					selector: 'td:first-child'
-				},
-
-				{% endif %}
 				"columnDefs": [
 					{
-						"targets": [ 1 ],
+						"targets": [ 0 ],
 						"visible": false,
 						"searchable": false
-					},
-					{
-						"targets": [0],
-						"orderable": false,
-						"width": 20,
-						"className": 'select-checkbox',
-						"targets": 0,
-						"visible": {% if not user.is_authenticated or user.role.id < 4 %} false {% else %} true {% endif %}
 					},
 				],
 			});
@@ -151,55 +136,6 @@
 				})
 			}
 		});
-//--------------------------removing selected record rows--------------------------------------
-		$("#btn-remove").on("click", function(){
-			var titles = [];
-			var rows = recordsTbl.rows({"selected":true});
-            $.each(rows.data(), function () {
-			    var row = this;
-			    titles.push(row[1]);
-			} );
-            if(titles.length>0){
-				Swal.fire({
-				  title: 'Are you sure you want to delete the selected items?',
-				  text: "You won't be able to revert this!",
-				  type: 'warning',
-				  showCancelButton: true,
-				  confirmButtonColor: '#3085d6',
-				  cancelButtonColor: '#d33',
-				  confirmButtonText: 'Yes'
-				}).then((result) => {
-				  if (result.value) {
-            		$.ajax({
-            			headers: { "X-CSRFToken": '{{ csrf_token }}' },
-            			url: "{% url 'records-index' %}",
-            			type: "post",
-						data: { "titles": titles, "remove": true },
-						success: function(data){
-							recordsTbl.ajax.reload();
-							Swal.fire(
-				    		  'Deleted!',
-				    		  'The selected items have been deleted',
-				    		  'success'
-				    		);
-						},
-						error: function(data){
-							alert("error");
-						}
-            		});
-				  }
-				})
-			}
-			else{
-				Swal.fire({
-				  type: 'warning',
-				  title: 'No rows selected!',
-				  html: 'You must first select a record',
-				  showConfirmButton: true,
-				})
-			}
-		});
-
 
 //--------------------------adjust datatables header--------------------------------
 	$('a[data-toggle="tab"]').on('shown.bs.tab', function(e){
@@ -207,19 +143,6 @@
 	      .columns.adjust();
 	});
 
-//---------------------------select/deselect all checkbox---------------------------
-	$("#records-select-all").on( "click", function(e) {
-		recordsTbl.rows({ page: 'current' }).select();
-	});
-	$("#records-deselect-all").on( "click", function(e) {
-		recordsTbl.rows({ page: 'current' }).deselect();
-	});
-	$("#accounts-select-all").on( "click", function(e) {
-		accountsTbl.rows({ page: 'current' }).select();
-	});
-	$("#accounts-deselect-all").on( "click", function(e) {
-		accountsTbl.rows({ page: 'current' }).deselect();
-	});
 
 //---------------------------account action button-----------------------------------
 	$("#btn-account-go").on("click", function(){
@@ -348,27 +271,16 @@
 								{% if user.is_authenticated and user.role.id > 1 %}
 								<a href="{% url 'records-add' %}" class="btn btn-primary" style="margin-bottom:10px"><i class="fa fa-plus fa-md"></i> ADD</a>
 								{% endif %}
-								{% if user.role.id > 3 %}
-								<button type="button" id="btn-remove" class="btn btn-danger" style="margin-bottom:10px"><i class="fa fa-trash fa-md"></i> REMOVE</button>
-							    {% endif %}
 								<button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
 							</div>
 						</div>
 					</div>
-					{% if user.role.id > 3 %}
-					<div class="row">
-						<div class="col-12 d-flex align-items-center">
-							<a id="records-select-all" href="#" style="margin-right:10px">SELECT ALL</a>
-							<a id="records-deselect-all" href="#" style="border-left: 1px solid #ccc; padding-left:10px">NONE</a>
-						</div>
-					</div>
-					{% endif %}
+
 					<div class="row" style="margin-top:20px">
 						<div class="col-12">
 							<table id="tbl-records" class="table table-striped table-bordered table-condensed" style="width:100%">
 						        <thead>
 						            <tr>
-										<th></th>
 										<th>ID</th>
 						                <th>RESEARCH TITLE</th>
 						                <th>YEAR</th>

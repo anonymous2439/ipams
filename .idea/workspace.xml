@@ -24,10 +24,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c9113322-820c-471e-9518-9aaf101f9d70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view_record.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view_record.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/accounts_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/accounts_view.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_records.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/edit_record/uploads.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/edit_record/uploads.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/records/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -116,9 +118,9 @@
       <screen x="0" y="27" width="1366" height="741" />
     </state>
     <state x="0" y="27" width="618" height="741" key="find.popup/0.27.1366.741@0.27.1366.741" timestamp="1606717009229" />
-    <state x="346" y="77" width="672" height="691" key="search.everywhere.popup" timestamp="1609906887503">
+    <state x="346" y="77" width="672" height="691" key="search.everywhere.popup" timestamp="1610011362241">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
-    <state x="346" y="77" width="672" height="691" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1609906887503" />
+    <state x="346" y="77" width="672" height="691" key="search.everywhere.popup/0.27.1366.741@0.27.1366.741" timestamp="1610011362241" />
   </component>
 </project>

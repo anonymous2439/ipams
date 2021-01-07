@@ -35,11 +35,87 @@
 	    	"scrollX": true,
 	    	"autoWidth": false,
 	    	"responsive": false,
-	    	"order": [[ 0, "desc" ]],
+	    	"order": [[ 1, "desc" ]],
+			"select": {
+				style: 'multi',
+				selector: 'td:first-child'
+			},
+				"columnDefs": [
+					{
+						"targets": [0],
+						"orderable": false,
+						"width": 20,
+						"className": 'select-checkbox',
+						"targets": 0,
+						"visible": true
+					},
+				],
 	    });
 
 	}
 	initRecordsTbl(false);
+
+//--------------------------removing selected record rows--------------------------------------
+	$("#btn-remove").on("click", function(){
+		var titles = [];
+		var rows = recordsTbl.rows({"selected":true});
+           $.each(rows.data(), function () {
+		    var row = this;
+		    titles.push(row[1]);
+		} );
+           if(titles.length>0){
+			Swal.fire({
+			  title: 'Are you sure you want to delete the selected items?',
+			  text: "You won't be able to revert this!",
+			  type: 'warning',
+			  showCancelButton: true,
+			  confirmButtonColor: '#3085d6',
+			  cancelButtonColor: '#d33',
+			  confirmButtonText: 'Yes'
+			}).then((result) => {
+			  if (result.value) {
+           		$.ajax({
+           			headers: { "X-CSRFToken": '{{ csrf_token }}' },
+           			type: "post",
+					data: { "titles": titles, "remove": true },
+					success: function(data){
+						recordsTbl.ajax.reload();
+						Swal.fire(
+			    		  'Deleted!',
+			    		  'The selected items have been deleted',
+			    		  'success'
+			    		);
+					},
+					error: function(data){
+						alert("error");
+					}
+           		});
+			  }
+			})
+		}
+		else{
+			Swal.fire({
+			  type: 'warning',
+			  title: 'No rows selected!',
+			  html: 'You must first select a record',
+			  showConfirmButton: true,
+			})
+		}
+	});
+
+//---------------------------select/deselect all checkbox---------------------------
+	$("#records-select-all").on( "click", function(e) {
+		recordsTbl.rows({ page: 'current' }).select();
+	});
+	$("#records-deselect-all").on( "click", function(e) {
+		recordsTbl.rows({ page: 'current' }).deselect();
+	});
+	$("#accounts-select-all").on( "click", function(e) {
+		accountsTbl.rows({ page: 'current' }).select();
+	});
+	$("#accounts-deselect-all").on( "click", function(e) {
+		accountsTbl.rows({ page: 'current' }).deselect();
+	});
 
     $("#is-ip").on("click", function(){
         if($(this).is(":checked"))
@@ -106,13 +182,23 @@
         </div>
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12 col-lg-12" style="background-color:white; padding:20px 10px 20px 10px;">
-                <div class="col-12 d-flex justify-content-end">
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
-                    &nbsp;<button type="button" id="btn-clear-filter" class="btn btn-secondary" style="margin-bottom:10px"><i class="fa fa-trash fa-md"></i> CLEAR FILTER</button>
+                <div class="row">
+                    <div class="col-12">
+                        <button type="button" id="btn-remove" class="btn btn-danger" style="margin-bottom:10px"><i class="fa fa-trash fa-md"></i> REMOVE</button>
+                        &nbsp;<button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
+                        &nbsp;<button type="button" id="btn-clear-filter" class="btn btn-secondary" style="margin-bottom:10px"><i class="fa fa-trash fa-md"></i> CLEAR FILTER</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 d-flex align-items-center">
+                        <a id="records-select-all" href="#" style="margin-right:10px">SELECT ALL</a>
+                        <a id="records-deselect-all" href="#" style="border-left: 1px solid #ccc; padding-left:10px">NONE</a>
+                    </div>
                 </div>
                 <table id="tbl-records" class="table table-striped table-bordered table-condensed" style="width:100%">
                     <thead>
                         <tr>
+                            <th></th>
                             <th>ID</th>
                             <th>Record</th>
                             <th>Record Type</th>

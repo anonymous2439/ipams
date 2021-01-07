@@ -20,9 +20,9 @@
 	</div>
 </div>
 
-<section id="record-type-section-1">
+<section>
 {% for upload in uploads %}
-	{% if upload.record_type.pk == 1 %}
+	{% if record.record_type.pk ==  upload.record_type.pk %}
 		<div class="row">
 			<div class="col-9">
 				{{ upload.name }}
@@ -35,20 +35,7 @@
 {% endfor %}
 </section>
 
-<section id="record-type-section-3" style="display:none">
-{% for upload in uploads %}
-	{% if upload.record_type.pk == 3 %}
-	<div class="row">
-		<div class="col-9">
-			{{ upload.name }}
-		</div>
-		<div class="col-3 d-flex justify-content-end">
-			<input type="file" name="upload-{{ upload.pk }}">
-		</div>
-	</div>
-	{% endif %}
-{% endfor %}
-</section>
+
 
 <div class="row" style="margin-top:10px;">
 	<div class="col-12 d-flex justify-content-end">
