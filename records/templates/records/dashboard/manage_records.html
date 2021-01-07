@@ -7,11 +7,15 @@
     $("#btn-filter-save").on("click", function(){
         initRecordsTbl(true);
     });
-    var recordsTbl;
+    $("#btn-clear-filter").on("click", function(){
+        initRecordsTbl(false);
+    });
+    var recordsTbl = null;
     function initRecordsTbl(isFiltered=false){
         filters = {}
-        if(isFiltered){
+        if(recordsTbl != null)
 			recordsTbl.clear().destroy();
+        if(isFiltered){
 			filters = {
 			    "is-filter": "1",
 			    "is-ip": $("#is-ip").val(),
@@ -28,9 +32,11 @@
 	    		type: "post",
 	    	},
 	    	"scrollX": true,
-	    	"responsive": true,
+	    	"autoWidth": false,
+	    	"responsive": false,
 	    	"order": [[ 0, "desc" ]],
 	    });
+
 	}
 	initRecordsTbl(false);
 
@@ -58,9 +64,9 @@
     $("#no-tags").on("click", function(){
         if($(this).is(":checked")){
             $(this).val("1");
-            $("#is-ip").attr("disabled", "true").prop("checked", false);
-            $("#for-commercialization").attr("disabled", "true").prop("checked", false);
-            $("#community-ext").attr("disabled", "true").prop("checked", false);
+            $("#is-ip").attr("disabled", "true").prop("checked", false).val("0");
+            $("#for-commercialization").attr("disabled", "true").prop("checked", false).val("0");
+            $("#community-ext").attr("disabled", "true").prop("checked", false).val("0");
         }
         else{
             $(this).val("0");
@@ -69,6 +75,14 @@
             $("#community-ext").removeAttr("disabled");
         }
     });
+
+
+    elem = $("#tbl-records")[0];
+    let resizeObserver = new ResizeObserver(() => {
+	    $($.fn.dataTable.tables(true)).DataTable()
+	       .columns.adjust();
+    });
+    resizeObserver.observe(elem);
 
 </script>
 {% endblock %}
@@ -89,19 +103,19 @@
                 <a href="{% url 'records-dashboard' %}" class="btn btn-warning"><i class="fa fa-arrow-left"></i></a>
             </div>
         </div>
-        <div class="row">
-            <div class="col-12 d-flex justify-content-end">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
-            </div>
-        </div>
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12 col-lg-12" style="background-color:white; padding:20px 10px 20px 10px;">
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
+                    &nbsp;<button type="button" id="btn-clear-filter" class="btn btn-secondary" style="margin-bottom:10px"><i class="fa fa-trash fa-md"></i> CLEAR FILTER</button>
+                </div>
                 <table id="tbl-records" class="table table-striped table-bordered table-condensed" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID</th>
                             <th>Record</th>
                             <th>Record Type</th>
+                            <th>Date Created</th>
                             <th>Tags</th>
                         </tr>
                     </thead>

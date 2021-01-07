@@ -198,13 +198,17 @@ class ViewManageDocuments(View):
                 Log(user=request.user, action=f'{record_upload.upload.name}_document status changed to \"{record_upload.record_upload_status}\", record ID: <a href="/record/{record_upload.record.pk}">#{record_upload.record.pk}</a>').save()
                 return JsonResponse({'success': True})
             else:
+                print(request.POST)
                 data = []
                 record_uploads = RecordUpload.objects.all()
+                if request.POST.get('is-filter', '0') == '1' and request.POST.get('record-upload-status', '0') is not '0':
+                    record_uploads = record_uploads.filter(record_upload_status=RecordUploadStatus.objects.get(pk=request.POST.get('record-upload-status', '0')))
                 for record_upload in record_uploads:
                     data.append([record_upload.pk,
+                                 record_upload.upload.name,
                                  f'<a href="/dashboard/manage/documents/record/{record_upload.record.pk}">{record_upload.record.title}</a>',
                                  f'{record_upload.record.record_type.name}',
-                                 record_upload.upload.name,
+                                 f'{record_upload.date_uploaded.strftime("%Y-%m-%d %H:%M:%S")}',
                                  f'<button type="button" onclick="onStatusChangeClick({record_upload.pk}, {record_upload.record_upload_status.pk});">Change</button> {record_upload.record_upload_status.name} ',
                                  f'<a href="/download/document/{record_upload.pk}">Download</a>'])
                 return JsonResponse({"data": data})
@@ -1605,7 +1609,7 @@ class LogsView(View):
             data = []
             logs = Log.objects.all()
             for log in logs:
-                data.append([log.pk, log.user.username, log.action, log.date_created.strftime("%Y-%m-%d %H:%M:%S")])
+                data.append([log.pk, log.action, log.user.username, log.date_created.strftime("%Y-%m-%d %H:%M:%S")])
             return JsonResponse({'data': data})
 
 
@@ -1764,6 +1768,7 @@ class ViewManageRecords(View):
                     record.pk,
                     f'<a href="/dashboard/manage/records/{record.pk}">{record.title}</a>',
                     record.record_type.name,
+                    record.date_created.strftime("%Y-%m-%d %H:%M:%S"),
                     tags,
                 ])
 

@@ -3,15 +3,40 @@
 
 {% block footer %}
 <script>
-	documentsTbl = $('#tbl-documents').DataTable({
-		"ajax":	{
-			headers: { "X-CSRFToken": '{{ csrf_token }}' },
-			dataType:"json",
-			type: "post",
-		},
-		"scrollX": true,
-		"responsive": true,
-	});
+
+    $("#btn-filter-save").on("click", function(){
+        initDocumentsTbl(true);
+    });
+    $("#btn-clear-filter").on("click", function(){
+        initDocumentsTbl(false);
+    });
+    var documentsTbl=null;
+    function initDocumentsTbl(isFiltered=false){
+        filters = {}
+        if(documentsTbl != null)
+			documentsTbl.clear().destroy();
+        if(isFiltered){
+			filters = {
+			    "is-filter": "1",
+			    "record-upload-status": $("input[name=record-upload-status]:checked").val()
+			}
+        }
+	    documentsTbl = $('#tbl-documents').DataTable({
+	    	"ajax":	{
+	    		headers: { "X-CSRFToken": '{{ csrf_token }}' },
+	    		dataType:"json",
+	    		type: "post",
+	    		data: filters,
+	    	},
+	    	"scrollX": true,
+	    	"autoWidth": false,
+	    	"responsive": false,
+	    });
+
+	}
+	initDocumentsTbl(false);
+
+
 
 	$("#btn-status-apply").on("click", function(){
         $.ajax({
@@ -59,13 +84,18 @@
         </div>
         <div class="row" style="margin-top:20px;">
             <div class="col-sm-12 col-lg-12" style="background-color:white; padding:20px 10px 20px 10px;">
+                <div class="col-12 d-flex justify-content-end">
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#filter-modal" style="margin-bottom:10px"><i class="fa fa-filter fa-md"></i> FILTER</button>
+                    &nbsp;<button type="button" id="btn-clear-filter" class="btn btn-secondary" style="margin-bottom:10px"><i class="fa fa-trash fa-md"></i> CLEAR FILTER</button>
+                </div>
                 <table id="tbl-documents" class="table table-striped table-bordered table-condensed" style="width:100%">
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Records</th>
+                            <th>Document</th>
+                            <th>Record</th>
                             <th>Record Type</th>
-                            <th>Documents</th>
+                            <th>Date Uploaded</th>
                             <th>Status</th>
                             <th>Files</th>
                         </tr>
@@ -81,6 +111,7 @@
 
 
 
+<!-- --------------------------------Modal--------------------------------------------- -->
 <div class="modal fade" id="status-change-modal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -106,6 +137,37 @@
                     <input type="hidden" id="record-upload-id" value="0">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="button" id="btn-status-apply" class="btn btn-primary">Apply</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="filter-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form method="post" id="form-filter">
+                {% csrf_token %}
+                <div class="modal-header base-bg-primary">
+                    <h5 class="modal-title">Filter</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="container">
+                        {% for status in record_upload_status %}
+                            <div class="radio">
+                                <label><input type="radio" name="record-upload-status" value="{{ status.pk }}" {% if status.pk == 1 %} checked {% endif %}> {{ status.name }}</label>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="hidden" name="is_filter" value="1"/>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" id="btn-filter-save" class="btn btn-primary" data-dismiss="modal">Apply</button>
                 </div>
             </form>
         </div>
