@@ -24,10 +24,12 @@
   <component name="ChangeListManager">
     <list default="true" id="c9113322-820c-471e-9518-9aaf101f9d70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view_record.html" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents_record.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents_record.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_records.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_view_record.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_view_record.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_approved.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_approved.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_pending.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/records/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -59,16 +61,16 @@
     <property name="settings.editor.selected.configurable" value="restructured.text.topic" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/records/templates/records/dashboard" />
+      <recent name="$PROJECT_DIR$/accounts/templates/accounts" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/records/templates/records/dashboard" />
       <recent name="$PROJECT_DIR$/records/templates/records" />
       <recent name="$PROJECT_DIR$/records/templates/records/view_record" />
       <recent name="$PROJECT_DIR$/records/templates/records/add_record" />
       <recent name="$PROJECT_DIR$/records/templates/records/profile" />
-    </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/records/templates/records/dashboard" />
-      <recent name="$PROJECT_DIR$/accounts/templates/accounts" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

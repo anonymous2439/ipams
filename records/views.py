@@ -195,7 +195,7 @@ class ViewManageDocuments(View):
                 record_upload = RecordUpload.objects.get(pk=int(request.POST.get('record_upload_id', 0)))
                 record_upload.record_upload_status = RecordUploadStatus.objects.get(pk=request.POST.get('status', 0))
                 record_upload.save()
-                Log(user=request.user, action=f'{record_upload.upload.name}_document status changed to \"{record_upload.record_upload_status}\", record ID: <a href="/record/{record_upload.record.pk}">#{record_upload.record.pk}</a>').save()
+                Log(user=request.user, action=f'{record_upload.upload.name}_document status changed to \"{record_upload.record_upload_status}\", record ID: <a href="/dashboard/logs/record/{record_upload.record.pk}">#{record_upload.record.pk}</a>').save()
                 return JsonResponse({'success': True})
             else:
                 print(request.POST)
@@ -241,6 +241,8 @@ class ViewManageDocumentsRecord(View):
     @method_decorator(login_required(login_url='/'))
     @method_decorator(authorized_record_user())
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}
@@ -435,6 +437,8 @@ class PendingRecordView(View):
 
     @method_decorator(login_required(login_url='/'))
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}
@@ -554,6 +558,8 @@ class MyRecordView(View):
     @method_decorator(login_required(login_url='/'))
     @method_decorator(authorized_record_user())
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}
@@ -677,6 +683,8 @@ class ApprovedRecordView(View):
 
     @method_decorator(login_required(login_url='/'))
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}
@@ -1802,6 +1810,8 @@ class DashboardManageRecord(View):
     @method_decorator(login_required(login_url='/'))
     @method_decorator(authorized_record_user())
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}

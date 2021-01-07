@@ -243,6 +243,14 @@
                 {% endif %}
             </div>
             <br><b>Adviser:</b> {{ record.adviser.username }}
+            <br><b>Owners:</b>
+            {% for owner in owners %}
+            {% if forloop.first %}
+            {{ owner.user.username }}
+            {% else %}
+            ,{{ owner.user.username }}
+            {% endif %}
+            {% endfor %}
             <br><b>Date Submitted:</b> {{ record.date_created }}
             <div id="doc-tags" style="margin-top:10px">
                 <div class="form-check form-check">
