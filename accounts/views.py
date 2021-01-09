@@ -127,7 +127,7 @@ def get_all_accounts(request):
                 '',
                 account.pk,
                 str(account.username),
-                f'{account.last_name}, {account.first_name} {account.last_name}',
+                f'{account.last_name}, {account.first_name} {account.middle_name}',
                 account.role.name,
                 role,
             ])

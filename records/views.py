@@ -251,7 +251,7 @@ class ViewManageDocumentsRecord(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -449,7 +449,7 @@ class PendingRecordView(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 5:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -571,7 +571,7 @@ class MyRecordView(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -663,7 +663,6 @@ class ApprovedRecordView(View):
     budget_types = BudgetType.objects.all()
     collaboration_types = CollaborationType.objects.all()
     publication_levels = PublicationLevel.objects.all()
-    # checked_uploads_status_types = CheckedUploadsStatusType.objects.all()
     uploads = Upload.objects.all()
     checked_record_form = CheckedRecordForm()
     context = {
@@ -674,7 +673,6 @@ class ApprovedRecordView(View):
         'budget_types': budget_types,
         'collaboration_types': collaboration_types,
         'publication_levels': publication_levels,
-        # 'checked_uploads_status_types': checked_uploads_status_types,
         'uploads': uploads,
         'checked_record_form': checked_record_form,
     }
@@ -695,7 +693,7 @@ class ApprovedRecordView(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -784,7 +782,6 @@ class DeclinedRecordView(View):
     budget_types = BudgetType.objects.all()
     collaboration_types = CollaborationType.objects.all()
     publication_levels = PublicationLevel.objects.all()
-    # checked_uploads_status_types = CheckedUploadsStatusType.objects.all()
     uploads = Upload.objects.all()
     checked_record_form = CheckedRecordForm()
     context = {
@@ -795,7 +792,6 @@ class DeclinedRecordView(View):
         'budget_types': budget_types,
         'collaboration_types': collaboration_types,
         'publication_levels': publication_levels,
-        # 'checked_uploads_status_types': checked_uploads_status_types,
         'uploads': uploads,
         'checked_record_form': checked_record_form,
     }
@@ -813,7 +809,7 @@ class DeclinedRecordView(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -1428,7 +1424,7 @@ class MyRecordsView(View):
                 record_status = f'<div class="badge badge-{badge}">{checked_record.status}</div>'
                 if checked_record.checked_by.role.pk == 3:
                     adviser_checked = record_status
-                elif checked_record.checked_by.role.pk == 4:
+                elif checked_record.checked_by.role.pk == 4 or checked_record.checked_by.role.id == 7:
                     ktto_checked = record_status
                 elif checked_record.checked_by.role.pk == 5:
                     rdco_checked = record_status
@@ -1447,7 +1443,7 @@ class PendingRecordsView(View):
     template_name = 'records/profile/pending_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 
@@ -1463,9 +1459,9 @@ class PendingRecordsView(View):
                     row[0],
                     '<a href="/record/pending/' + str(row[0]) + '">' + row[1] + '</a>',
                 ])
-        elif request.user.role.id == 4:
+        elif request.user.role.id == 4 or request.user.role.id == 7:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 3 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4)")
+                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 3 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 or accounts_user.role_id = 7)")
                 rows = cursor.fetchall()
             data = []
             for row in rows:
@@ -1476,7 +1472,7 @@ class PendingRecordsView(View):
 
         elif request.user.role.id == 5:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 5)")
+                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 OR accounts_user.role_id = 7 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 5)")
                 rows = cursor.fetchall()
             data = []
             for row in rows:
@@ -1491,7 +1487,7 @@ class ApprovedRecordsView(View):
     template_name = 'records/profile/approved_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 
@@ -1510,7 +1506,7 @@ class DeclinedRecordsView(View):
     template_name = 'records/profile/declined_records.html'
 
     @method_decorator(login_required(login_url='/'))
-    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'itso', 'tbi']))
+    @method_decorator(authorized_roles(roles=['student', 'adviser', 'ktto', 'rdco', 'tbi']))
     def get(self, request):
         return render(request, self.template_name)
 
@@ -1563,7 +1559,7 @@ class Dashboard(View):
                     adviser_pending_count = len(rows)
                 with connection.cursor() as cursor:
                     cursor.execute(
-                        "SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 3 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4)")
+                        "SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 3 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 or accounts_user.role_id = 7)")
                     rows = cursor.fetchall()
                     ktto_pending_count = len(rows)
                 with connection.cursor() as cursor:
@@ -1659,7 +1655,7 @@ class DashboardLogsRecordView(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -1841,7 +1837,7 @@ class DashboardManageRecord(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
