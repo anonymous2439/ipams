@@ -24,17 +24,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c9113322-820c-471e-9518-9aaf101f9d70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ipams/templates/ipams/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/ipams/templates/ipams/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view_record.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/logs_view_record.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents_record.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_documents_record.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_view_record.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_view_record.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_approved.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_approved.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_declined.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_declined.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_pending.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,8 +50,8 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/records/templates/records/dashboard" />
-    <property name="settings.editor.selected.configurable" value="restructured.text.topic" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -109,15 +98,27 @@
     </ignored-roots>
   </component>
   <component name="WindowStateProjectService">
+    <state x="309" y="42" key="#Inspections" timestamp="1611754233487">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="309" y="42" key="#Inspections/0.0.1366.728@0.0.1366.728" timestamp="1611754233487" />
     <state x="404" y="223" width="547" height="357" key="#Notifications" timestamp="1605339348229">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
-    <state x="404" y="221" width="547" height="357" key="#Notifications/0.24.1366.744@0.24.1366.744" timestamp="1601823495456" />
     <state x="404" y="223" key="#Notifications/0.27.1366.741@0.27.1366.741" timestamp="1605339348229" />
-    <state x="141" y="55" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1609744432628">
-      <screen x="0" y="27" width="1366" height="741" />
+    <state x="141" y="28" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1611754275239">
+      <screen x="0" y="0" width="1366" height="728" />
     </state>
+    <state x="141" y="28" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1611754275239" />
     <state x="141" y="55" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.27.1366.741@0.27.1366.741" timestamp="1609744432628" />
+    <state x="669" y="115" key="FileChooserDialogImpl" timestamp="1611749746951">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="669" y="115" key="FileChooserDialogImpl/0.0.1366.728@0.0.1366.728" timestamp="1611749746951" />
+    <state x="184" y="8" key="SettingsEditor" timestamp="1611754209146">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="184" y="8" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1611754209146" />
     <state x="0" y="27" width="618" height="741" key="find.popup" timestamp="1606717009229">
       <screen x="0" y="27" width="1366" height="741" />
     </state>
