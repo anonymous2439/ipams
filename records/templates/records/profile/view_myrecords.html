@@ -242,8 +242,8 @@
                     <a href="#" id="btn-approve">Approve</a> |
                     <a href="#" id="btn-decline">Decline</a> |
                 {% endif %}
-                    <a href="{% url 'records-edit' record_id=record.pk %}" id="btn-edit">Edit</a>
                 {% if is_removable %}
+                    <a href="{% url 'records-edit' record_id=record.pk %}" id="btn-edit">Edit</a>
                     &nbsp;|&nbsp;<a href="#" id="btn-remove">Remove</a>
                 {% endif %}
             </div>

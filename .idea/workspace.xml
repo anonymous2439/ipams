@@ -25,6 +25,8 @@
     <list default="true" id="c9113322-820c-471e-9518-9aaf101f9d70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/accounts/templates/help/manual.html" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/templates/help/manual.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/add_record/uploads.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/add_record/uploads.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -51,20 +53,21 @@
     <property name="DefaultHtmlFileTemplate" value="HTML File" />
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/staticfiles/images" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/records/templates/records/dashboard" />
-      <recent name="$PROJECT_DIR$/accounts/templates/accounts" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\anonymous\django\ipams\staticfiles\images" />
       <recent name="$PROJECT_DIR$/records/templates/records/dashboard" />
       <recent name="$PROJECT_DIR$/records/templates/records" />
       <recent name="$PROJECT_DIR$/records/templates/records/view_record" />
       <recent name="$PROJECT_DIR$/records/templates/records/add_record" />
-      <recent name="$PROJECT_DIR$/records/templates/records/profile" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\anonymous\django\ipams\media\images\manual" />
+      <recent name="$PROJECT_DIR$/records/templates/records/dashboard" />
+      <recent name="$PROJECT_DIR$/accounts/templates/accounts" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />

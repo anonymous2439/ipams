@@ -1,10 +1,14 @@
 {% extends 'ipams/base.html' %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 {% block content %}
     <style>
         b{
             font-weight: bold;
+        }
+        .figures{
+            background-color:gray;
         }
     </style>
     <div class="container-fluid" style="margin-top:100px;">
@@ -38,7 +42,10 @@
                          <a href="#profile-records-3">Approved</a><br>
                          <a href="#profile-records-4">Declined</a><br>
                         <li><a href="#record-tags"><b>Record Tags</b></a></li>
-                        <li><a href="#account-types"><b>Account types</b></a></li>
+                        <li><a href="#user-accounts"><b>User Accounts</b></a></li>
+                         <a href="#user-accounts-1">Login/Signup</a><br>
+                         <a href="#user-accounts-2">Roles</a><br>
+                         <a href="#user-accounts-3">Access Control</a><br>
                         <li><a href="#dashboard"><b>Dashboard</b></a></li>
                          <a href="#dashboard-1">Manage Records</a><br>
                          <a href="#dashboard-2">Manage Documents</a><br>
@@ -72,6 +79,10 @@
                                 -Other records<br>
 -Can be created by any non-guest users
                             </p>
+                            <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                <a href="{% static 'images/manual/man1.png' %}"><img src="{% static 'images/manual/man1.png' %}" width="1000px"></a>
+                            </div>
+                            <label class="text-muted">Figure 1</label>
                         </section>
                         <hr>
 <!-- ---------------------------------------------RECORD SUBMISSION FLOW--------------------------------------------------------- -->
@@ -97,7 +108,15 @@
                                     There are 2 ways to add a record:<br>
                                     <ul>
                                         <li>Add button on the records tab from the homepage</li>
-                                        <li>By migrating records from excel file</li>
+                                            <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                <a href="{% static 'images/manual/man2.png' %}"><img src="{% static 'images/manual/man2.png' %}" width="1000px"></a>
+                                            </div>
+                                            <label class="text-muted">Figure 2</label>
+                                        <li style="margin-top:50px;">By migrating records from excel file</li>
+                                            <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                <a href="{% static 'images/manual/man3.png' %}"><img src="{% static 'images/manual/man3.png' %}" width="1000px"></a>
+                                            </div>
+                                            <label class="text-muted">Figure 3</label>
                                     </ul>
                                 </p>
                                 <b id="managing-records-2">Migrating records from spreadsheet</b>
@@ -113,10 +132,11 @@
                                 <b id="managing-records-3">Editting Records</b>
                                 <p>
                                     <ul>
-                                        <li>For Student / Adviser</li>
-                                            -Only the owner of the record can edit the record but only if it hasn't been approved yet by an adviser
-                                        <li>ITSO / KTTO / RDCO</li>
-                                            -Can edit any records anytime from the "Dashboard > Manage Records" or records that it owns
+                                        <li>You can edit your own records by accessing the record from the profile menus "My records". Take note that the record can only be edited if the record hasn't been approved by any authorized users yet.</li>
+                                            <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                <a href="{% static 'images/manual/man4.png' %}"><img src="{% static 'images/manual/man4.png' %}" width="1000px"></a>
+                                            </div>
+                                            <label class="text-muted">Figure 4</label>
                                     </ul>
                                 </p>
                                 <b id="managing-records-4">Deleting Records</b>
@@ -124,25 +144,47 @@
                                     <ul>
                                         <li>if the record is approved, the record can no longer be deleted</li>
                                         <li>if the record is declined or is not yet approved, the record can be deleted</li>
+                                        <p>See "Figure 4" on how to delete a record</p>
                                     </ul>
                                 </p>
                                 <b id="managing-records-5">Viewing Records</b>
                                     <p>
                                         <ul>
                                             <li>Records shown from the homepage are records that are approved by RDCO</li>
+                                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                    <a href="{% static 'images/manual/man5.png' %}"><img src="{% static 'images/manual/man5.png' %}" width="1000px"></a>
+                                                </div>
+                                                <label class="text-muted">Figure 5</label>
                                             <li>Records from the homepage can only be opened by registered users</li>
-                                            <li>You can also view records from the list of records inside your profile's records section</li>
+                                            <li>You can also view records from the list of records you submitted inside your profile menus "My records" section</li>
                                             <li>If you are inside a "proposal" and you haven't created a "Thesis/Research" yet, you may create one by selecting "New Record(Research)" beside the proposal link</li>
+                                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                    <a href="{% static 'images/manual/man6.png' %}"><img src="{% static 'images/manual/man6.png' %}" width="1000px"></a>
+                                                </div>
+                                                <label class="text-muted">Figure 6</label>
                                             <li>You may navigate to "Proposal" or "Thesis/Research" record when inside one of the 2 records</li>
+                                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                    <a href="{% static 'images/manual/man7.png' %}"><img src="{% static 'images/manual/man7.png' %}" width="1000px"></a>
+                                                </div>
+                                                <label class="text-muted">Figure 7</label>
                                         </ul>
                                     </p>
                                 </p>
                                 <b id="managing-records-6">Record comments</b>
                                     <p>
                                         A record comment is a comment saved on a record after the record is reviewed.
+
+                                        <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                            <a href="{% static 'images/manual/man8.png' %}"><img src="{% static 'images/manual/man8.png' %}" width="1000px"></a>
+                                        </div>
+                                        <label class="text-muted">Figure 8</label>
                                         <ul>
                                             <li>There can only be 1 comment per reviewer: Adviser, KTTO/TBI and RDCO.</li>
                                             <li>Comments can be seen when you clicked on a status inside a record from "My records" section under profile menu</li>
+                                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                                    <a href="{% static 'images/manual/man9.png' %}"><img src="{% static 'images/manual/man9.png' %}" width="1000px"></a>
+                                                </div>
+                                                <label class="text-muted">Figure 9</label>
                                         </ul>
                                     </p>
                                 </p>
@@ -156,6 +198,10 @@
                             <ul>
                                 <li>Only 1 document can be uploaded per requirements</li>
                                 <li>Uploading into a requirements which already has an existing file will re-write the existing file</li>
+                                    <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                        <a href="{% static 'images/manual/man10.png' %}"><img src="{% static 'images/manual/man10.png' %}" width="1000px"></a>
+                                    </div>
+                                    <label class="text-muted">Figure 10</label>
                             </ul>
                             <b id="managing-documents-2">Document status</b>
                             <p>
@@ -173,11 +219,19 @@
 <!-- ---------------------------------------------PROFILE RECORDS--------------------------------------------------------- -->
                         <section id="profile-records">
                             <h4><b>Profile Records</b></h4>
+                                <div class="figures" style="width:300px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                    <a href="{% static 'images/manual/man11.png' %}"><img src="{% static 'images/manual/man11.png' %}" width="300px"></a>
+                                </div>
+                                <label class="text-muted">Figure 11</label><br>
                             <b id="profile-records-1">My records</b>
                             <p>
                                 Shows the records you owned or submitted
                                 <ul>
                                     <li>Here is where you can edit your records and the status of the projects you submitted</li>
+                                        <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                            <a href="{% static 'images/manual/man12.png' %}"><img src="{% static 'images/manual/man12.png' %}" width="1000px"></a>
+                                        </div>
+                                        <label class="text-muted">Figure 12</label><br>
                                 </ul>
                             </p>
                             <b id="profile-records-2">Pending</b>
@@ -189,11 +243,24 @@
                                     <li>KTTO and TBI users shares the same pending records. Approving a record while on this type of account will automatically submit the record to the RDCO</li>
                                     <li>RDCO users shares the same pending records. Approving a record while on this type of account will automatically show the record for public viewing</li>
                                 </ul>
+
+                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                    <a href="{% static 'images/manual/man13.png' %}"><img src="{% static 'images/manual/man13.png' %}" width="1000px"></a>
+                                </div>
+                                <label class="text-muted">Figure 13</label><br>
                             </p>
                             <b id="profile-records-3">Approved</b>
                             <p>These are the list of records that you approved</p>
+                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                    <a href="{% static 'images/manual/man14.png' %}"><img src="{% static 'images/manual/man14.png' %}" width="1000px"></a>
+                                </div>
+                                <label class="text-muted">Figure 14</label><br>
                             <b id="profile-records-4">Declined</b>
                             <p>These are the list of records that you declined</p>
+                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                    <a href="{% static 'images/manual/man15.png' %}"><img src="{% static 'images/manual/man15.png' %}" width="1000px"></a>
+                                </div>
+                                <label class="text-muted">Figure 15</label><br>
                             <p></p>
                         </section>
                         <hr>
@@ -206,12 +273,38 @@
                                 <li>For Commercialization</li>
                                 <li>Community Extension</li>
                             </ol>
+                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                    <a href="{% static 'images/manual/man16.png' %}"><img src="{% static 'images/manual/man16.png' %}" width="1000px"></a>
+                                </div>
+                                <label class="text-muted">Figure 16</label><br>
                         </section>
                         <hr>
-<!-- ---------------------------------------------ACCOUNT TYPES--------------------------------------------------------- -->
-                        <section id="account-types">
-                            <h4><b>Account Types</b></h4>
-                            <b>Guest</b>
+<!-- ---------------------------------------------USER ACCOUNTS--------------------------------------------------------- -->
+                        <section id="user-accounts">
+                            <h4><b>User Accounts</b></h4>
+                            <b id="user-accounts-1">Login</b><br>
+                            <ul>
+                                <li>There is no restrictions on login as of the moment</li>
+                                <li>A success popup will show when you are successfully logged in</li>
+                                <li>A warning popup will show if you entered an incorrect username/password</li>
+                            </ul>
+                            <div class="figures" style="width:300px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                <a href="{% static 'images/manual/man17.png' %}"><img src="{% static 'images/manual/man17.png' %}" width="300px"></a>
+                            </div>
+                            <label class="text-muted">Figure 17</label><br>
+                            <b>Signup</b>
+                            <ul>
+                                <li>You can request to be a student/adviser upon signing up or continue as a guest. fill-in all the required information and take note of your username as you have to present your username to the authorized user to upgrade your account</li>
+                                <li>The password doesn't have restrictions as of the moment, and the username/password is not case sensitive. Either way, it is best to register a secure password to avoid hacking</li>
+                            </ul>
+                                <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
+                                    <a href="{% static 'images/manual/man18.png' %}"><img src="{% static 'images/manual/man18.png' %}" width="1000px"></a>
+                                </div>
+                                <label class="text-muted">Figure 18</label><br>
+                            <h5><b id="user-accounts-2">Roles</b></h5>
+                            <b>Unregistered Guest</b>
+                            <p>Are users who viewed the website but not registered</p>
+                            <b>Registered Guest</b>
                             <p>Are users who registered to the website but is not part of the institution</p>
                             <b>Student</b>
                             <p>Are the users who submits records to the advisers and are the authors of the records</p>
@@ -225,6 +318,36 @@
                             <p>Mainly reviews the submitted documents from the dashboard</p>
                             <b>TBI</b>
                             <p>Same functionalities as the KTTO and can review records the same way as the KTTO</p>
+
+                            <h5 id="user-accounts-3"><b>Access Control</b></h5>
+                            <b>Can add, edit or remove records that has not yet been approved by any authorized users</b>
+                             <ul>
+                                 <li>Student, Adviser, ITSO, KTTO, RDCO</li>
+                             </ul>
+                            <b>Can approve or decline a submitted record</b>
+                             <ul>
+                                 <li>Adviser, KTTO, RDCO</li>
+                             </ul>
+                            <b>Can download abstract file of a record</b>
+                             <ul>
+                                 <li>Student, Adviser, ITSO, KTTO, RDCO</li>
+                             </ul>
+                            <b>Can check or uncheck record tags</b>
+                             <ul>
+                                 <li>Adviser, ITSO, KTTO, RDCO</li>
+                             </ul>
+                            <b>Can access the dashboard and manage records, accounts, documents and view logs</b>
+                             <ul>
+                                 <li>ITSO, KTTO, RDCO</li>
+                             </ul>
+                            <b>Can access profile records for reviewing (Pending, Approved, Declined)</b>
+                             <ul>
+                                 <li>Adviser, KTTO, RDCO</li>
+                             </ul>
+                            <b>Can review and comment from the uploaded documents by the students</b>
+                             <ul>
+                                 <li>ITSO, KTTO, RDCO</li>
+                             </ul>
                         </section>
                         <hr>
 <!-- ---------------------------------------------DASHBOARD--------------------------------------------------------- -->
@@ -235,7 +358,7 @@
                             <b id="dashboard-2">Manage Documents</b>
                             <p>Here is where you can review all uploaded documents and change it's <a href="#managing-documents-2">Document status</a></p>
                             <b id="dashboard-3">Manage Accounts</b>
-                            <p>Same functionalities as the Accounts tab from the homepage. This is where you can change the <a href="#account-types">roles</a> of the users</p>
+                            <p>Same functionalities as the Accounts tab from the homepage. This is where you can change the <a href="#roles">roles</a> of the users</p>
                             <b id="dashboard-4">Logs</b>
                             <p>This is where some user activities are recorded and monitored</p>
                         </section>
