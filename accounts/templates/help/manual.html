@@ -10,8 +10,12 @@
     <div class="container-fluid" style="margin-top:100px;">
         <div class="row">
             <div class="col-md-3">
-                <section>
-                    <h2>TABLE OF CONTENTS</h2><br>
+                <h2>TABLE OF CONTENTS</h2><br>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-3">
+                <section style="height:600px; overflow-y:auto;">
                     <ol>
                         <li><a href="#record-types"><b>Record types</b></a></li>
                          <a href="#record-types-1">Proposal</a><br>
@@ -20,20 +24,26 @@
                         <li><a href="#record-submission-flow"><b>Record submission flow</b></a></li>
                         <li><a href="#managing-records"><b>Managing records</b></a></li>
                          <a href="#managing-records-1">Adding records</a><br>
-                         <a href="#managing-records-2">Editting records</a><br>
-                         <a href="#managing-records-3">Deleting records</a><br>
+                         <a href="#managing-records-2">Migrating records from spreadsheet</a><br>
+                         <a href="#managing-records-3">Editting records</a><br>
+                         <a href="#managing-records-4">Deleting records</a><br>
+                         <a href="#managing-records-5">Viewing records</a><br>
+                         <a href="#managing-records-6">Record comments</a><br>
                         <li><a href="#managing-documents"><b>Managing documents</b></a></li>
                          <a href="#managing-documents-1">Uploading documents</a><br>
                          <a href="#managing-documents-2">Document status</a><br>
                         <li><a href="#profile-records"><b>Profile Records</b></a></li>
-                         <a href="#">My records</a><br>
-                         <a href="#">Pending</a><br>
-                         <a href="#">Approved</a><br>
-                         <a href="#">Declined</a><br>
+                         <a href="#profile-records-1">My records</a><br>
+                         <a href="#profile-records-2">Pending</a><br>
+                         <a href="#profile-records-3">Approved</a><br>
+                         <a href="#profile-records-4">Declined</a><br>
                         <li><a href="#record-tags"><b>Record Tags</b></a></li>
-                         <a href="#">Intellectual Property</a><br>
-                         <a href="#">For Commercialization</a><br>
-                         <a href="#">Community Extension</a><br>
+                        <li><a href="#account-types"><b>Account types</b></a></li>
+                        <li><a href="#dashboard"><b>Dashboard</b></a></li>
+                         <a href="#dashboard-1">Manage Records</a><br>
+                         <a href="#dashboard-2">Manage Documents</a><br>
+                         <a href="#dashboard-3">Manage Accounts</a><br>
+                         <a href="#dashboard-4">Logs</a><br>
                     </ol>
                 </section>
             </div>
@@ -41,6 +51,7 @@
                 <div style="background-color:white; height:600px; overflow-y:auto;">
                     <div class="container">
                         <hr>
+<!-- ---------------------------------------------RECORD TYPES--------------------------------------------------------- -->
                         <section id="record-types">
                             <h4><b>Record Types</b></h4>
                             <p>There are 3 types of records for any record submitted:</p>
@@ -63,6 +74,7 @@
                             </p>
                         </section>
                         <hr>
+<!-- ---------------------------------------------RECORD SUBMISSION FLOW--------------------------------------------------------- -->
                         <section id="record-submission-flow">
                             <h4><b>Record submission flow</b></h4>
                             <p>
@@ -75,6 +87,7 @@
                             </p>
                         </section>
                         <hr>
+<!-- ---------------------------------------------MANAGING RECORDS--------------------------------------------------------- -->
                         <section id="managing-records">
                             <h4><b>Managing Records</b></h4>
                             <p>
@@ -87,25 +100,146 @@
                                         <li>By migrating records from excel file</li>
                                     </ul>
                                 </p>
-                                <b id="managing-records-2">Editting Records</b>
+                                <b id="managing-records-2">Migrating records from spreadsheet</b>
+                                <p>
+                                    <ol>
+                                        <li>Follow the data entry format which can be viewed <a href="{% url 'records-download-format' %}">HERE</a>.</li>
+                                        <li>When adding a new entry to a section, simply duplicate the record row and replace the existing
+                                            section with the new entry.</li>
+                                        <li>The migration stops when they read a merged cell that contains END OF RECORDS.</li>
+                                        <li>After the format is thoroughly followed, Press GENERATE to add the records.</li>
+                                    </ol>
+                                </p>
+                                <b id="managing-records-3">Editting Records</b>
                                 <p>
                                     <ul>
-                            <li></li>
                                         <li>For Student / Adviser</li>
                                             -Only the owner of the record can edit the record but only if it hasn't been approved yet by an adviser
                                         <li>ITSO / KTTO / RDCO</li>
                                             -Can edit any records anytime from the "Dashboard > Manage Records" or records that it owns
                                     </ul>
                                 </p>
-                                <b id="managing-records-3">Deleting Records</b>
+                                <b id="managing-records-4">Deleting Records</b>
                                 <p>
                                     <ul>
-                                        <li>if the record is approved, the record can no longer be deleted<br></li>
+                                        <li>if the record is approved, the record can no longer be deleted</li>
                                         <li>if the record is declined or is not yet approved, the record can be deleted</li>
                                     </ul>
                                 </p>
+                                <b id="managing-records-5">Viewing Records</b>
+                                    <p>
+                                        <ul>
+                                            <li>Records shown from the homepage are records that are approved by RDCO</li>
+                                            <li>Records from the homepage can only be opened by registered users</li>
+                                            <li>You can also view records from the list of records inside your profile's records section</li>
+                                            <li>If you are inside a "proposal" and you haven't created a "Thesis/Research" yet, you may create one by selecting "New Record(Research)" beside the proposal link</li>
+                                            <li>You may navigate to "Proposal" or "Thesis/Research" record when inside one of the 2 records</li>
+                                        </ul>
+                                    </p>
+                                </p>
+                                <b id="managing-records-6">Record comments</b>
+                                    <p>
+                                        A record comment is a comment saved on a record after the record is reviewed.
+                                        <ul>
+                                            <li>There can only be 1 comment per reviewer: Adviser, KTTO/TBI and RDCO.</li>
+                                            <li>Comments can be seen when you clicked on a status inside a record from "My records" section under profile menu</li>
+                                        </ul>
+                                    </p>
+                                </p>
+                        </section>
+                        <hr>
+<!-- ---------------------------------------------MANAGING DOCUMENTS--------------------------------------------------------- -->
+                        <section id="managing-documents">
+                            <h4><b>Managing Documents</b></h4>
+                            <p>Documents are requirements of a record which can be uploaded with the record or uploaded later by editting the record</p>
+                            <b id="managing-documents-1">Uploading documents</b>
+                            <ul>
+                                <li>Only 1 document can be uploaded per requirements</li>
+                                <li>Uploading into a requirements which already has an existing file will re-write the existing file</li>
+                            </ul>
+                            <b id="managing-documents-2">Document status</b>
+                            <p>
+                                These are currently the status a document can have after a certain user has reviewed the document:
+                                <ol>
+                                    <li>For Application</li>
+                                    <li>Reviewed</li>
+                                    <li>Filed</li>
+                                    <li>Disapproved</li>
+                                    <li>Approved</li>
+                                </ol>
                             </p>
                         </section>
+                        <hr>
+<!-- ---------------------------------------------PROFILE RECORDS--------------------------------------------------------- -->
+                        <section id="profile-records">
+                            <h4><b>Profile Records</b></h4>
+                            <b id="profile-records-1">My records</b>
+                            <p>
+                                Shows the records you owned or submitted
+                                <ul>
+                                    <li>Here is where you can edit your records and the status of the projects you submitted</li>
+                                </ul>
+                            </p>
+                            <b id="profile-records-2">Pending</b>
+                            <p>
+                                These are the records which is submitted to you that you must review
+                                <ul>
+                                    <li>Pending records are not available for "Guest" and "Student" users</li>
+                                    <li>Adviser users shares the same pending records. Approving a record while on this type of account will automatically submit the record to the KTTO</li>
+                                    <li>KTTO and TBI users shares the same pending records. Approving a record while on this type of account will automatically submit the record to the RDCO</li>
+                                    <li>RDCO users shares the same pending records. Approving a record while on this type of account will automatically show the record for public viewing</li>
+                                </ul>
+                            </p>
+                            <b id="profile-records-3">Approved</b>
+                            <p>These are the list of records that you approved</p>
+                            <b id="profile-records-4">Declined</b>
+                            <p>These are the list of records that you declined</p>
+                            <p></p>
+                        </section>
+                        <hr>
+<!-- ---------------------------------------------RECORD TAGS--------------------------------------------------------- -->
+                        <section id="record-tags">
+                            <h4><b>Record Tags</b></h4>
+                            These are tags that can be checked per record by the reviewer whenever he/she sees fit. Guest or Student users are not allowed to check or uncheck these tags. Tags can be checked by opening a record. These are the record tags available:
+                            <ol>
+                                <li>Intellectual Property</li>
+                                <li>For Commercialization</li>
+                                <li>Community Extension</li>
+                            </ol>
+                        </section>
+                        <hr>
+<!-- ---------------------------------------------ACCOUNT TYPES--------------------------------------------------------- -->
+                        <section id="account-types">
+                            <h4><b>Account Types</b></h4>
+                            <b>Guest</b>
+                            <p>Are users who registered to the website but is not part of the institution</p>
+                            <b>Student</b>
+                            <p>Are the users who submits records to the advisers and are the authors of the records</p>
+                            <b>Adviser</b>
+                            <p>Are the first to review the submitted records by the students and submits the record to the KTTO by approving the record</p>
+                            <b>KTTO</b>
+                            <p>Are the users who reviews the submitted records from the advisers and submits the record to the RDCO by approving the record </p>
+                            <b>RDCO</b>
+                            <p>Are the last to review the submitted records by the KTTO to make the records visible to public by approving the record</p>
+                            <b>ITSO</b>
+                            <p>Mainly reviews the submitted documents from the dashboard</p>
+                            <b>TBI</b>
+                            <p>Same functionalities as the KTTO and can review records the same way as the KTTO</p>
+                        </section>
+                        <hr>
+<!-- ---------------------------------------------DASHBOARD--------------------------------------------------------- -->
+                        <section id="dashboard">
+                            <h4><b>Dashboard</b></h4>
+                            <b id="dashboard-1">Manage Records</b>
+                            <p>Here is where you can remove or view all submitted records. Filtering records is different here compare to the homepage</p>
+                            <b id="dashboard-2">Manage Documents</b>
+                            <p>Here is where you can review all uploaded documents and change it's <a href="#managing-documents-2">Document status</a></p>
+                            <b id="dashboard-3">Manage Accounts</b>
+                            <p>Same functionalities as the Accounts tab from the homepage. This is where you can change the <a href="#account-types">roles</a> of the users</p>
+                            <b id="dashboard-4">Logs</b>
+                            <p>This is where some user activities are recorded and monitored</p>
+                        </section>
+                        <hr>
                     </div>
                 </div>
             </div>
