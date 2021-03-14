@@ -24,6 +24,21 @@
   <component name="ChangeListManager">
     <list default="true" id="c9113322-820c-471e-9518-9aaf101f9d70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ipams/templates/ipams/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/ipams/templates/ipams/base.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/edit_record/uploads.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/edit_record/uploads.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/approved_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/approved_records.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/declined_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/declined_records.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/my_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/my_records.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/pending_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/pending_records.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_approved.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_approved.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_declined.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_declined.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_myrecords.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/templates/records/profile/view_pending.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/profile/view_pending.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/records/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

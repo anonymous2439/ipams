@@ -1,0 +1,114 @@
+{% extends 'ipams/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <style>
+        b{
+            font-weight: bold;
+        }
+    </style>
+    <div class="container-fluid" style="margin-top:100px;">
+        <div class="row">
+            <div class="col-md-3">
+                <section>
+                    <h2>TABLE OF CONTENTS</h2><br>
+                    <ol>
+                        <li><a href="#record-types"><b>Record types</b></a></li>
+                         <a href="#record-types-1">Proposal</a><br>
+                         <a href="#record-types-2">Thesis/Research</a><br>
+                         <a href="#record-types-3">Project</a><br>
+                        <li><a href="#record-submission-flow"><b>Record submission flow</b></a></li>
+                        <li><a href="#managing-records"><b>Managing records</b></a></li>
+                         <a href="#managing-records-1">Adding records</a><br>
+                         <a href="#managing-records-2">Editting records</a><br>
+                         <a href="#managing-records-3">Deleting records</a><br>
+                        <li><a href="#managing-documents"><b>Managing documents</b></a></li>
+                         <a href="#managing-documents-1">Uploading documents</a><br>
+                         <a href="#managing-documents-2">Document status</a><br>
+                        <li><a href="#profile-records"><b>Profile Records</b></a></li>
+                         <a href="#">My records</a><br>
+                         <a href="#">Pending</a><br>
+                         <a href="#">Approved</a><br>
+                         <a href="#">Declined</a><br>
+                        <li><a href="#record-tags"><b>Record Tags</b></a></li>
+                         <a href="#">Intellectual Property</a><br>
+                         <a href="#">For Commercialization</a><br>
+                         <a href="#">Community Extension</a><br>
+                    </ol>
+                </section>
+            </div>
+            <div class="col-md-9">
+                <div style="background-color:white; height:600px; overflow-y:auto;">
+                    <div class="container">
+                        <hr>
+                        <section id="record-types">
+                            <h4><b>Record Types</b></h4>
+                            <p>There are 3 types of records for any record submitted:</p>
+                            <b id="record-types-1">Proposal</b>
+                            <p>
+                                -Records that are to be proposed to the advisers. This is a pre-requisite for "Thesis/Research" record type<br>
+                                -Can be created by any non-guest users
+                            </p>
+                            <b id="record-types-2">Thesis/Research</b>
+                            <p>
+                                -Must have submitted a proposal already.<br>
+-This is automatically grouped together with the "Proposal" record so that you can easily navigate from "Proposal" to "Thesis/Research" or vise versa<br>
+-Only the owners of the record with "Proposal" record type can add a new record with "Thesis/Research" record type<br>
+-Users can only add the "Thesis/Research" record type from the opened "Proposal" record
+                            </p>
+                            <b id="record-types-3">Project</b>
+                            <p>
+                                -Other records<br>
+-Can be created by any non-guest users
+                            </p>
+                        </section>
+                        <hr>
+                        <section id="record-submission-flow">
+                            <h4><b>Record submission flow</b></h4>
+                            <p>
+                                Student  >  Adviser  >  KTTO / TBI  >  RDCO<br>
+                                <ol>
+                                    <li>Student can submit 1 or more records to 1 specific adviser only</li>
+                                    <li>Adviser can then review the submitted record and submit it to the KTTO</li>
+                                    <li>KTTO / TBI users shares the same records submitted to them. KTTO/TBI users automatically receives the submitted record from the advisers, reviewed and are then submitted to KTTO/TBI users.</li>
+                                </ol>
+                            </p>
+                        </section>
+                        <hr>
+                        <section id="managing-records">
+                            <h4><b>Managing Records</b></h4>
+                            <p>
+                                <b id="managing-records-1">Adding Records</b>
+                                <p>
+                                    Note: guest users are not permitted to add a record<br>
+                                    There are 2 ways to add a record:<br>
+                                    <ul>
+                                        <li>Add button on the records tab from the homepage</li>
+                                        <li>By migrating records from excel file</li>
+                                    </ul>
+                                </p>
+                                <b id="managing-records-2">Editting Records</b>
+                                <p>
+                                    <ul>
+                            <li></li>
+                                        <li>For Student / Adviser</li>
+                                            -Only the owner of the record can edit the record but only if it hasn't been approved yet by an adviser
+                                        <li>ITSO / KTTO / RDCO</li>
+                                            -Can edit any records anytime from the "Dashboard > Manage Records" or records that it owns
+                                    </ul>
+                                </p>
+                                <b id="managing-records-3">Deleting Records</b>
+                                <p>
+                                    <ul>
+                                        <li>if the record is approved, the record can no longer be deleted<br></li>
+                                        <li>if the record is declined or is not yet approved, the record can be deleted</li>
+                                    </ul>
+                                </p>
+                            </p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

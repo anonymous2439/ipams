@@ -152,3 +152,16 @@ def save_profile(request):
         user.save()
     return JsonResponse({'message': 'success'})
 
+
+class HelpView(View):
+    name = 'help/index.html'
+
+    def get(self, request):
+        return render(request, self.name)
+
+
+class ManualView(View):
+    name = 'help/manual.html'
+
+    def get(self, request):
+        return render(request, self.name)

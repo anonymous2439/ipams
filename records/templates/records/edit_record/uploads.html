@@ -21,6 +21,7 @@
 </div>
 
 <section>
+	<hr>
 {% for upload in uploads %}
 	{% if record.record_type.pk ==  upload.record_type.pk %}
 		<div class="row">
@@ -31,6 +32,7 @@
 				<input type="file" name="upload-{{ upload.pk }}">
 			</div>
 		</div>
+		<hr>
 	{% endif %}
 {% endfor %}
 </section>

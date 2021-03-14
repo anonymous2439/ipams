@@ -449,7 +449,7 @@ class PendingRecordView(View):
         for checked_record in checked_records:
             if checked_record.checked_by.role.id == 3:
                 adviser_checked = {'status': checked_record.status, 'content': checked_record}
-            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 5:
+            if checked_record.checked_by.role.id == 4 or checked_record.checked_by.role.id == 7:
                 ktto_checked = {'status': checked_record.status, 'content': checked_record}
             if checked_record.checked_by.role.id == 5:
                 rdco_checked = {'status': checked_record.status, 'content': checked_record}
@@ -651,7 +651,7 @@ class MyRecordView(View):
                     checked_record.save()
                 else:
                     print('invalid form')
-                return redirect('records-view', record_id)
+                return redirect('records-myrecords')
 
 
 class ApprovedRecordView(View):
@@ -798,6 +798,8 @@ class DeclinedRecordView(View):
 
     @method_decorator(login_required(login_url='/'))
     def get(self, request, record_id):
+        owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}
         ktto_checked = {'status': 'pending'}
@@ -882,7 +884,7 @@ class DeclinedRecordView(View):
                     checked_record.save()
                 else:
                     print('invalid form')
-                return redirect('records-declined')
+                return redirect('records-declined-view', record_id)
 
 
 class Add(View):
@@ -935,6 +937,7 @@ class Add(View):
                 owners = json.loads(request.POST.get('owners-id'))
                 adviser = json.loads(request.POST.get('adviser-id'))
                 record.adviser = User.objects.get(pk=adviser[0]['id'])
+                record.representative = f'{request.user.first_name} {request.user.last_name}'
                 record.save()
                 # if the record type is proposal, the record will also be saved in the research group
                 if record.record_type.pk == 1:
@@ -1263,6 +1266,7 @@ class Edit(View):
 
 class ParseExcel(View):
     def post(self, request):
+        logs = {'success_count': 0, 'failed_count': 0, 'rows': [{'success': 1, 'message': 'test message'}]}
         try:
             excel_file = request.FILES['file']
             data = {}
@@ -1273,6 +1277,7 @@ class ParseExcel(View):
             data = data['ResearchProductivity'][6:][0:]
             for d in data:
                 if d[0] != 'end of records':
+                    representative = d[0]
                     title = d[1]
                     year_accomplished = d[2]
                     classification = 1
@@ -1297,7 +1302,7 @@ class ParseExcel(View):
                         record = Record(title=title, year_accomplished=year_accomplished,
                                         classification=Classification.objects.get(pk=classification),
                                         psced_classification=PSCEDClassification.objects.get(pk=psced_classification),
-                                        record_type=RecordType.objects.get(pk=3))
+                                        record_type=RecordType.objects.get(pk=3), representative=representative)
                         record.save()
                         UserRecord(record=record, user=request.user).save()
                     else:
@@ -1472,7 +1477,7 @@ class PendingRecordsView(View):
 
         elif request.user.role.id == 5:
             with connection.cursor() as cursor:
-                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 OR accounts_user.role_id = 7 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 5)")
+                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE (accounts_user.role_id = 4 OR accounts_user.role_id = 7) AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 5)")
                 rows = cursor.fetchall()
             data = []
             for row in rows:

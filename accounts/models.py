@@ -51,6 +51,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 	REQUIRED_FIELDS = ['email']
 
 
+class College(models.Model):
+	name = models.CharField(max_length=100, unique=True)
+	code = models.CharField(max_length=10, unique=True, default=None)
+	date_created = models.DateTimeField(auto_now_add=True)
+
+
+class Department(models.Model):
+	name = models.CharField(max_length=100, unique=True)
+	code = models.CharField(max_length=10, unique=True, default=None)
+	date_created = models.DateTimeField(auto_now_add=True)
+
+
 class Course(models.Model):
 	name = models.CharField(max_length=100, unique=True)
 	date_created = models.DateTimeField(auto_now_add=True)

@@ -79,6 +79,7 @@ class Record(models.Model):
     date_created = models.DateTimeField(auto_now_add=True)
     adviser = models.ForeignKey('accounts.User', on_delete=models.DO_NOTHING, null=True, blank=True)
     record_type = models.ForeignKey(RecordType, on_delete=models.DO_NOTHING, null=True, blank=True, default=3)
+    representative = models.CharField(max_length=100)
 
     def __str__(self):
         return self.title
