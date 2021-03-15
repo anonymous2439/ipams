@@ -175,6 +175,7 @@ class Home(View):
             return JsonResponse({"data": data})
 
 
+# table
 class ViewManageDocuments(View):
     name = 'records/dashboard/manage_documents.html'
     record_uploads = RecordUpload.objects.all()
@@ -196,7 +197,6 @@ class ViewManageDocuments(View):
                 Log(user=request.user, action=f'{record_upload.upload.name}_document status changed to \"{record_upload.record_upload_status}\", record ID: <a href="/dashboard/logs/record/{record_upload.record.pk}">#{record_upload.record.pk}</a>').save()
                 return JsonResponse({'success': True})
             else:
-                print(request.POST)
                 data = []
                 record_uploads = RecordUpload.objects.all()
                 if request.POST.get('is-filter', '0') == '1' and request.POST.get('record-upload-status', '0') != '0':

@@ -116,6 +116,7 @@ def insert_data(apps, schema_editor):
     ])
 
     RecordUploadStatus.objects.bulk_create([
+        RecordUploadStatus(name=''),
         RecordUploadStatus(name='For Application'),
         RecordUploadStatus(name='Reviewed'),
         RecordUploadStatus(name='Filed'),
