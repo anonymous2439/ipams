@@ -25,10 +25,18 @@
 {% for upload in uploads %}
 	{% if record.record_type.pk ==  upload.record_type.pk %}
 		<div class="row">
-			<div class="col-9">
+			<div class="col-7">
 				{{ upload.name }}
 			</div>
+			<div class="col-2">
+				{% for recordupload in recorduploads %}
+					{% if recordupload.upload.pk == upload.pk %}
+						Uploaded
+					{% endif %}
+				{% endfor %}
+			</div>
 			<div class="col-3 d-flex justify-content-end">
+
 				<input type="file" name="upload-{{ upload.pk }}">
 			</div>
 		</div>

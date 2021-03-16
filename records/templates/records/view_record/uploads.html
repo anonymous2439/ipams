@@ -5,12 +5,21 @@
 </div>
 <section id="upload-list">
 {% for upload in uploads %}
-{% if record.record_type.pk == upload.record_type.pk %}
-<div class="row">
-    <div class="col-12">
-        <a href="#" onclick="onUploadTitleClick({{ upload.pk }}, {{ record.pk }});">{{ upload.name }}</a>
-    </div>
-</div>
-{% endif %}
+    {% if record.record_type.pk == upload.record_type.pk %}
+    <hr>
+        <div class="row">
+            <div class="col-9">
+                <a href="#" onclick="onUploadTitleClick({{ upload.pk }}, {{ record.pk }});">{{ upload.name }}</a>
+            </div>
+            <div class="3">
+                {% for recordupload in recorduploads %}
+                    {% if recordupload.upload.pk == upload.pk %}
+                        Uploaded
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 {% endfor %}
+    <hr>
 </section>

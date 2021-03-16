@@ -339,7 +339,6 @@ class ViewRecord(View):
     budget_types = BudgetType.objects.all()
     collaboration_types = CollaborationType.objects.all()
     publication_levels = PublicationLevel.objects.all()
-    # checked_uploads_status_types = CheckedUploadsStatusType.objects.all()
     uploads = Upload.objects.all()
     checked_record_form = CheckedRecordForm()
     context = {
@@ -350,7 +349,6 @@ class ViewRecord(View):
         'budget_types': budget_types,
         'collaboration_types': collaboration_types,
         'publication_levels': publication_levels,
-        # 'checked_uploads_status_types': checked_uploads_status_types,
         'uploads': uploads,
         'checked_record_form': checked_record_form,
     }
@@ -360,11 +358,14 @@ class ViewRecord(View):
     def get(self, request, record_id):
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         is_removable = False
+        record = Record.objects.get(pk=record_id)
+        record_uploads = record.recordupload_set.all()
         for checked_record in checked_records:
             if checked_record.status == 'declined':
                 is_removable = True
         self.context['record'] = Record.objects.get(pk=record_id)
         self.context['is_removable'] = is_removable
+        self.context['recorduploads'] = record_uploads
         return render(request, self.name, self.context)
 
     def post(self, request, record_id):
@@ -581,6 +582,7 @@ class MyRecordView(View):
                 is_removable = True
         if adviser_checked['status'] == 'pending' and ktto_checked['status'] == 'pending' and rdco_checked['status'] == 'pending':
             is_removable = True
+        record_uploads = record.recordupload_set.all()
         self.context['adviser_checked'] = adviser_checked
         self.context['ktto_checked'] = ktto_checked
         self.context['rdco_checked'] = rdco_checked
@@ -588,6 +590,7 @@ class MyRecordView(View):
         self.context['record'] = record
         self.context['is_removable'] = is_removable
         self.context['research_record'] = research_record
+        self.context['recorduploads'] = record_uploads
         return render(request, self.name, self.context)
 
     def post(self, request, record_id):
@@ -1148,6 +1151,7 @@ class Edit(View):
         record_form = forms.RecordForm(instance=record)
         publication_form = forms.PublicationForm(instance=Publication.objects.get(record=record))
         publication_name = Publication.objects.get(record=record).name
+        record_uploads = record.recordupload_set.all()
         context = {
             'author_roles': self.author_roles,
             'conference_levels': self.conference_levels,
@@ -1163,6 +1167,7 @@ class Edit(View):
             'budgets': budgets,
             'collaborations': collaborations,
             'uploads': self.uploads,
+            'recorduploads': record_uploads,
         }
         return render(request, self.name, context)
 
