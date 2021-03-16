@@ -4,10 +4,23 @@
                 </div>
             </div>
             <div id="conference-rows">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label>Label:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Title:</label>
+                    </div>
+                    <div class="col-lg-2">
+                        <label>Date:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Venue:</label>
+                    </div>
+                </div>
                 {% for conference in record.conference_set.all %}
                     <div class="row" id="conference-1">
                         <div class="col-lg-2">
-                            <label>Label:</label>
                             <select name="conference_levels[]" class="form-control" disabled>
                                 {% for conference_level in conference_levels %}
                                     <option value="{{ conference_level.pk }}" {% if conference.conference_level.pk == conference_level.pk %} selected {% endif %}>{{ conference_level.name }}</option>
@@ -15,15 +28,12 @@
                             </select>
                         </div>
                         <div class="col-lg-4">
-                            <label>Title:</label>
                             <input type="text" placeholder="Title" name="conference_titles[]" class="form-control" value="{{ conference.title }}" readonly>
                         </div>
                         <div class="col-lg-2">
-                            <label>Date:</label>
                             <input type="date" name="conference_dates[]" class="form-control" value="{{ conference.date|date:'Y-m-d' }}" readonly>
                         </div>
                         <div class="col-lg-4">
-                            <label>Venue:</label>
                             <input type="text" placeholder="Venue" name="conference_venues[]" class="form-control" value="{{ conference.venue }}" readonly>
                         </div>
                     </div>

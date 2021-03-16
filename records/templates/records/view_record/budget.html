@@ -4,10 +4,20 @@
                 </div>
             </div>
             <div id="budget-rows">
+                <div class="row">
+                    <div class="col-lg-2">
+                        <label>Type:</label>
+                    </div>
+                    <div class="col-lg-4">
+                        <label>Budget Allocation:</label>
+                    </div>
+                    <div class="col-lg-6">
+                        <label>Funding Source:</label>
+                    </div>
+                </div>
                 {% for budget in record.budget_set.all %}
                     <div class="row" id="budget-1">
                         <div class="col-lg-2">
-                            <label>Type:</label>
                             <select name="budget_types[]" class="form-control" disabled>
                                 {% for budget_type in budget_types %}
                                     <option value="{{ budget_type.pk }}" {% if budget.budget_type.pk == budget_type.pk %} selected {% endif %}>{{ budget_type.name }}</option>
@@ -15,11 +25,9 @@
                             </select>
                         </div>
                         <div class="col-lg-4">
-                            <label>Budget Allocation:</label>
                             <input type="number" name="budget_allocations[]" class="form-control" value="{{ budget.budget_allocation }}" readonly>
                         </div>
                         <div class="col-lg-6">
-                            <label>Funding Source:</label>
                             <input type="text" name="funding_sources[]" class="form-control" value="{{ budget.funding_source }}" readonly>
                         </div>
                     </div>

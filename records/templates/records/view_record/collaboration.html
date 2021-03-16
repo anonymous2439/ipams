@@ -4,18 +4,26 @@
     </div>
 </div>
 <div id="collaboration-rows">
-    {% for collaboration in record.collaboration_set.all %}
-    <div class="row" id="collaboration-1">
+    <div class="row">
         <div class="col-lg-5">
             <label>Other Industry:</label>
-            <input type="text" name="industries[]" class="form-control" value="{{ collaboration.industry }}" readonly>
         </div>
         <div class="col-lg-5">
             <label>Institution:</label>
-            <input type="text" name="institutions[]" class="form-control" value="{{ collaboration.institution }}" readonly>
         </div>
         <div class="col-lg-2">
             <label>Type:</label>
+        </div>
+    </div>
+    {% for collaboration in record.collaboration_set.all %}
+    <div class="row" id="collaboration-1">
+        <div class="col-lg-5">
+            <input type="text" name="industries[]" class="form-control" value="{{ collaboration.industry }}" readonly>
+        </div>
+        <div class="col-lg-5">
+            <input type="text" name="institutions[]" class="form-control" value="{{ collaboration.institution }}" readonly>
+        </div>
+        <div class="col-lg-2">
             <select name="collaboration_types[]" class="form-control" disabled>
                 {% for collaboration_type in collaboration_types %}
                 <option value="{{ collaboration_type.pk }}" {% if collaboration.collaboration_type.pk == collaboration_type.pk %} selected {% endif %}>{{ collaboration_type.name }}</option>
