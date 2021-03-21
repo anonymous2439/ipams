@@ -52,19 +52,21 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 
 class College(models.Model):
-	name = models.CharField(max_length=100, unique=True)
-	code = models.CharField(max_length=10, unique=True, default=None)
+	name = models.CharField(max_length=100)
+	code = models.CharField(max_length=10, default=None)
 	date_created = models.DateTimeField(auto_now_add=True)
 
 
 class Department(models.Model):
-	name = models.CharField(max_length=100, unique=True)
-	code = models.CharField(max_length=10, unique=True, default=None)
+	name = models.CharField(max_length=100)
+	code = models.CharField(max_length=10, default=None)
+	college = models.ForeignKey(College, on_delete=models.CASCADE)
 	date_created = models.DateTimeField(auto_now_add=True)
 
 
 class Course(models.Model):
 	name = models.CharField(max_length=100, unique=True)
+	department = models.ForeignKey(Department, on_delete=models.CASCADE)
 	date_created = models.DateTimeField(auto_now_add=True)
 
 
