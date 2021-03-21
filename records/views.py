@@ -1,3 +1,4 @@
+import datetime
 import json
 import mimetypes
 
@@ -10,7 +11,7 @@ from django.views import View
 from django.http import HttpResponse, JsonResponse
 
 from accounts.decorators import authorized_roles, authorized_record_user
-from accounts.models import User, UserRole, UserRecord, RoleRequest, Log
+from accounts.models import User, UserRole, UserRecord, RoleRequest, Log, Student
 from .forms import CheckedRecordForm
 from .models import Record, AuthorRole, Classification, PSCEDClassification, ConferenceLevel, BudgetType, \
     CollaborationType, Author, Conference, PublicationLevel, Publication, Budget, Collaboration, CheckedRecord, Upload, \
@@ -940,7 +941,14 @@ class Add(View):
                 owners = json.loads(request.POST.get('owners-id'))
                 adviser = json.loads(request.POST.get('adviser-id'))
                 record.adviser = User.objects.get(pk=adviser[0]['id'])
-                record.representative = f'{request.user.first_name} {request.user.last_name}'
+                student = Student.objects.get(user=request.user)
+                record.representative = f'{student.user.first_name} {student.user.last_name}'
+                record.save()
+                year = str(datetime.datetime.now().year)[2:]
+                serial = record.pk
+                college = student.course.department.college.code
+                department = student.course.department.code
+                record.code = f'{year}-{serial}-{college}-{department}-{student.user.last_name.upper()}'
                 record.save()
                 # if the record type is proposal, the record will also be saved in the research group
                 if record.record_type.pk == 1:
@@ -1798,7 +1806,7 @@ class ViewManageRecords(View):
                     tags += f'<div class="badge badge-secondary">Community extension</div>&nbsp;'
                 data.append([
                     '',
-                    record.pk,
+                    record.code,
                     f'<a href="/dashboard/manage/records/{record.pk}">{record.title}</a>',
                     record.record_type.name,
                     record.date_created.strftime("%Y-%m-%d %H:%M:%S"),
