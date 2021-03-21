@@ -531,6 +531,7 @@ class PendingRecordView(View):
                 return redirect('records-pending')
 
 
+# template view when selecting from my records table
 class MyRecordView(View):
     name = 'records/profile/view_myrecords.html'
     author_roles = AuthorRole.objects.all()
@@ -604,6 +605,11 @@ class MyRecordView(View):
                 for del_record_upload in del_record_uploads:
                     del_record_upload.file.delete()
                 del_record.delete()
+                return JsonResponse({'success': True})
+            # resubmitting
+            if request.POST.get('resubmit', 'false') == 'true':
+                checked_record = CheckedRecord.objects.get(record=Record.objects.get(pk=record_id), status='declined')
+                checked_record.delete()
                 return JsonResponse({'success': True})
             # updating record tags
             elif request.POST.get('tags_update', 'false') == 'true':

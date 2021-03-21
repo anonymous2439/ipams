@@ -31,8 +31,8 @@
             });
             $("#btn-remove").on("click", function(){
                 Swal.fire({
-                  title: 'Are you sure?',
-                  text: "You won't be able to revert this!",
+                  title: 'Delete record',
+                  text: "Are you sure?, you won't be able to revert this!",
                   type: 'warning',
                   showCancelButton: true,
                   confirmButtonColor: '#3085d6',
@@ -53,6 +53,37 @@
                     Swal.fire(
                       'Deleted!',
                       'Your record has been deleted.',
+                      'success'
+                    ).then((result) => {
+                        window.location.replace("{% url 'records-myrecords' %}");
+                    });
+                  }
+                })
+            });
+            $("#btn-resubmit").on("click", function(){
+                Swal.fire({
+                  title: 'Resubmit record',
+                  text: "Are you sure?, you won't be able to revert this!",
+                  type: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#3085d6',
+                  cancelButtonColor: '#d33',
+                  confirmButtonText: 'Yes, resubmit it!'
+                }).then((result) => {
+                  if (result.value) {
+                     $.ajax({
+		    	    	"headers": { "X-CSRFToken": '{{ csrf_token }}' },
+		    	    	"type": "post",
+		    	    	"data": {"resubmit": "true"},
+                        "success": function(data){
+                        },
+                        "error": function(data){
+                            alert("error");
+                        }
+		    	    });
+                    Swal.fire(
+                      'Record submitted!',
+                      'Your record has been submitted.',
                       'success'
                     ).then((result) => {
                         window.location.replace("{% url 'records-myrecords' %}");
@@ -245,6 +276,9 @@
                 {% if is_removable %}
                     <a href="{% url 'records-edit' record_id=record.pk %}" id="btn-edit">Edit</a>
                     &nbsp;|&nbsp;<a href="#" id="btn-remove">Remove</a>
+                {% endif %}
+                {% if adviser_checked.status == 'declined' or ktto_checked.status == 'declined' or rdco_checked.status == 'declined' %}
+                    &nbsp;|&nbsp;<a href="#" id="btn-resubmit">Resubmit</a>
                 {% endif %}
             </div>
             <br><b>Adviser:</b> {{ record.adviser.username }}
