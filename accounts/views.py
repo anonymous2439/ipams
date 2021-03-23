@@ -121,8 +121,8 @@ def get_all_accounts(request):
         for account in accounts:
             role = ''
             role_request = RoleRequest.objects.filter(user=account).first()
-            if role_request:
-                role = f'<a>{role_request.role.name}</a>'
+            if role_request and role_request.role.pk != 1:
+                role = f'<a href="#" onclick="acceptRole({account.pk}, {role_request.role.pk})">{role_request.role.name}</a>'
             data.append([
                 '',
                 account.pk,

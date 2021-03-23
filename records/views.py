@@ -412,6 +412,7 @@ class ViewRecord(View):
                 return JsonResponse({'success': False})
 
 
+# Pending template view
 class PendingRecordView(View):
     name = 'records/profile/view_pending.html'
     author_roles = AuthorRole.objects.all()
@@ -1285,6 +1286,7 @@ class Edit(View):
 
 class ParseExcel(View):
     def post(self, request):
+        count = 0
         logs = {'success_count': 0, 'failed_count': 0, 'rows': [{'success': 1, 'message': 'test message'}]}
         try:
             excel_file = request.FILES['file']
@@ -1379,9 +1381,13 @@ class ParseExcel(View):
                                 collaboration_type = 3
                         Collaboration(collaboration_type=CollaborationType.objects.get(pk=collaboration_type),
                                       industry=industry, institution=institution, record=record).save()
+                    count += 1
                 else:
                     break
-            messages.success(request, 'Import Success!')
+            if count > 0:
+                messages.success(request, f'{count} records successfully imported!')
+            else:
+                messages.error(request, '0 records were imported!')
         except (MultiValueDictKeyError, KeyError, ValueError, OSError):
             messages.error(request, "Some rows have invalid values")
             print('Multivaluedictkeyerror/KeyError/ValueError/OSError')
@@ -1463,6 +1469,7 @@ class MyRecordsView(View):
         return JsonResponse({"data": data})
 
 
+# Pending records table
 class PendingRecordsView(View):
     template_name = 'records/profile/pending_records.html'
 
@@ -1758,6 +1765,7 @@ class DashboardLogsRecordView(View):
                 return redirect('records-view', record_id)
 
 
+# dashboard manage records table
 class ViewManageRecords(View):
     name = 'records/dashboard/manage_records.html'
 
@@ -1812,6 +1820,7 @@ class ViewManageRecords(View):
                     tags += f'<div class="badge badge-secondary">Community extension</div>&nbsp;'
                 data.append([
                     '',
+                    record.pk,
                     record.code,
                     f'<a href="/dashboard/manage/records/{record.pk}">{record.title}</a>',
                     record.record_type.name,
