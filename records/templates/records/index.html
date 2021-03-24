@@ -382,6 +382,8 @@ section with the new entry.</li>
 								<li>The migration stops when they read a merged cell that contains END OF RECORDS.</li>
 								<li>After the format is thoroughly followed, Press GENERATE to add the records.</li>
 							</ol>
+							<label>Logs</label>
+							<textarea rows="5" class="form-control">{{ logs }}</textarea>
 						</div>
 						<div class="col-lg-4">
 							<form id="form-import" action="{% url 'records-upload' %}" method="POST" enctype="multipart/form-data">

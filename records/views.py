@@ -83,12 +83,17 @@ class Home(View):
     def get(self, request):
         login_required = request.GET.get('next', False)
         user_roles = UserRole.objects.all()
+        logs = request.session.get('logs', '')
         context = {
             'login_required': login_required,
             'record_form': forms.RecordForm(),
             'login_form': LoginForm(),
             'user_roles': user_roles,
+            'logs': logs,
         }
+        if logs != '':
+            del request.session['logs']
+            request.session.modified = True
         return render(request, self.name, context)
 
     def post(self, request):
@@ -1286,8 +1291,11 @@ class Edit(View):
 
 class ParseExcel(View):
     def post(self, request):
+        row_count = 5
         count = 0
-        logs = {'success_count': 0, 'failed_count': 0, 'rows': [{'success': 1, 'message': 'test message'}]}
+        error_count = 0
+        now = datetime.datetime.now().strftime('%d/%m/%Y %H:%M:%S')
+        logs = now+'\n'
         try:
             excel_file = request.FILES['file']
             data = {}
@@ -1297,6 +1305,7 @@ class ParseExcel(View):
                 data = xlsx_get(excel_file, column_limit=50)
             data = data['ResearchProductivity'][6:][0:]
             for d in data:
+                row_count += 1
                 if d[0] != 'end of records':
                     representative = d[0]
                     title = d[1]
@@ -1327,6 +1336,8 @@ class ParseExcel(View):
                         record.save()
                         UserRecord(record=record, user=request.user).save()
                     else:
+                        logs += f'\nDuplicate entry on row "{row_count}"'
+                        error_count += 1
                         continue
                     Conference(title=conference_title,
                                conference_level=ConferenceLevel.objects.get(pk=conference_level),
@@ -1384,10 +1395,9 @@ class ParseExcel(View):
                     count += 1
                 else:
                     break
-            if count > 0:
-                messages.success(request, f'{count} records successfully imported!')
-            else:
-                messages.error(request, '0 records were imported!')
+            messages.success(request, f'{count} records imported!')
+            messages.error(request, f'{error_count} records contains errors and cannot be imported. See Upload page for the logs...')
+            request.session['logs'] = logs + f'\nTotal records found: {row_count-6}, Success: {count}, Errors: {error_count}'
         except (MultiValueDictKeyError, KeyError, ValueError, OSError):
             messages.error(request, "Some rows have invalid values")
             print('Multivaluedictkeyerror/KeyError/ValueError/OSError')

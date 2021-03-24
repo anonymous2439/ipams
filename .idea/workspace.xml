@@ -24,63 +24,6 @@
   <component name="ChangeListManager">
     <list default="true" id="c9113322-820c-471e-9518-9aaf101f9d70" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/accounts/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/accounts/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/abstract/123.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/abstract/123_k8J2Ee6.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/abstract/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/abstract/data.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/abstract/notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_3BRfRAw.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_3sfKfHP.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_9PmO7Z9.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_ACGY7sD.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_Ai6Cy6R.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_BIl5mpx.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_D3ccGef.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_EGSWRCX.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_EtMWWiU.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_FkWEwN2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_GAhai1B.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_GIHx54W.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_GzHOzJl.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_IZL6GS2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_IbpfTI5.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_JLdSpHD.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_JWaeu2l.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_Jcw0tHH.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_JfnjGkB.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_KE7fpCr.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_QC95djS.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_S6QENES.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_Ta7L2MC.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_UEdRVBs.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_UZVtr9T.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_UvyTC1a.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_W19sSoj.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_Yvq9F3s.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_ZVnrTnO.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_aZpMtgT.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_b2TCxJ7.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_cebWIJC.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_gTKBkX2.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_jUkGLll.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/123_nGYq8Jo.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/2020_07_Thesis_Submission_Links_all.txt" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/base.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/base_OEhLp2X.html" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/data.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/data_e7v96rg.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/data_gLQJh4k.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/data_kxMPeN3.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/data_owcnKQI.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/data_sB4q03u.xlsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/id_rsa_1.pub" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/notes" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/notes_1BKoUBb" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/q2.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/media/documents/test2_1.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/records/templates/records/dashboard/manage_records.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/dashboard/manage_records.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/records/templates/records/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/records/templates/records/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/records/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/records/views.py" afterDir="false" />
     </list>
