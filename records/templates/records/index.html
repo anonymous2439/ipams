@@ -108,10 +108,10 @@
 			}
 			filters['classification']=$("#id_classification").val();
 			if(filters['classification']!='')
-				$("#filter-tags").append('<div class="badge badge-success">Classification='+filters['classification']+'</div>&nbsp;');
+				$("#filter-tags").append('<div class="badge badge-success">Classification='+$("#id_classification option:selected").html()+'</div>&nbsp;');
 			filters['psced_classification']=$("#id_psced_classification").val();
 			if(filters['psced_classification']!='')
-				$("#filter-tags").append('<div class="badge badge-success">PSCED Classification='+filters['psced_classification']+'</div>&nbsp;');
+				$("#filter-tags").append('<div class="badge badge-success">PSCED Classification='+$("#id_psced_classification option:selected").html()+'</div>&nbsp;');
 			if($("#author_cb").is(":checked")){
 				filters["author"]=$("#author").val();
 				$("#filter-tags").append('<div class="badge badge-success">Author='+filters['author']+'</div>&nbsp;');
