@@ -305,7 +305,7 @@
                                                 <div class="row">
                                                     <div class="col-12 d-flex justify-content-end">
                                                         <a href="#" id="edit-profile" style="margin-right:10px;">Edit profile</a>
-                                                        <a href="#" id="change-password">Change Password</a>
+                                                        <a href="#" id="change-password" data-toggle="modal" data-target="#change-password-modal">Change Password</a>
                                                     </div>
                                                 </div>
                                             </div>
@@ -370,8 +370,47 @@
                 </div>
             </div>
         </div>
+        <!-- Change Password Modal -->
+        <div class="modal fade" id="change-password-modal" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <form method="post" action="{% url 'accounts-change-password' %}" id="change-password-form">
+                        {% csrf_token %}
+                        <div class="modal-header base-bg-primary">
+                            <h5 class="modal-title">Change Password</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-group">
+                                            <label for="password-old">Old password</label><input type="password" class="form-control" id="password-old" name="password-old" required>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="password-new">New password</label><input type="password" class="form-control" id="password-new" name="password-new" required>
+                                        </div>
+                                        <div class="row profile-row" id="change-password-btn-footer">
+                                            <div class="col-12 d-flex justify-content-end">
+                                                <button type="button" class="btn btn-danger" data-dismiss="modal" style="margin-right:10px" id="btn-change-password-cancel">Cancel</button>
+                                                <button type="submit" class="btn btn-success" id="btn-change-password-save">Save</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- end of modals -->
     </div>
-    
+
+
+
     <div class="container-fluid">
         {% if messages %}
             {% for message in messages %}
@@ -430,9 +469,6 @@
             $("#profile-btn-footer").show();
             $("#full_name").hide()
             $("#multi-name-row").show();
-        });
-        $("#change-password").on("click", function(){
-            alert("not yet implemented");
         });
         $("#btn-profile-cancel").on("click",function(){
             $(".profile-input.editable").attr("readonly", "true");

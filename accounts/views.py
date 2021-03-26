@@ -2,7 +2,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout as auth_logout
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
 from django.shortcuts import redirect
@@ -10,6 +10,7 @@ from . import forms
 from .decorators import authorized_roles
 from .models import User, UserRole, RoleRequest, Course, Student, Log
 from django.db.models import Q
+from django.contrib.auth.hashers import check_password
 
 
 class RegisterView(View):
@@ -107,6 +108,20 @@ def logout(request):
     auth_logout(request)
     messages.success(request, 'You are now logged out from the system...')
     return redirect('/')
+
+
+def change_password(request):
+    if request.method == 'POST':
+        password_old = request.POST.get('password-old', None)
+        password_new = request.POST.get('password-new', None)
+        if (password_old is not None or password_old != '') and (password_new is not None or password_new != ''):
+            if check_password(password_old, request.user.password):
+                request.user.set_password(password_new)
+                request.user.save()
+                messages.success(request, "Password changed!")
+            else:
+                messages.error(request, 'Incorrect old password')
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
 @authorized_roles(roles=['adviser', 'ktto', 'rdco', 'itso', 'tbi'])

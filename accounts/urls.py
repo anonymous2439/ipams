@@ -11,4 +11,5 @@ urlpatterns = [
     path('profile/save/', views.save_profile, name='accounts-profile-save'),
     path('help/', views.HelpView.as_view(), name='accounts-help'),
     path('manual/', views.ManualView.as_view(), name='accounts-manual'),
+    path('password/change', views.change_password, name='accounts-change-password'),
 ]
