@@ -12,7 +12,19 @@
 //-----------------------initializing datatables---------------------------------------------
 		var recordsTbl;
 		var accountsTbl;
-		var filters = {};
+		var filters = {
+				"year_from":"{{ year_from }}",
+				"year_to":"{{ year_to }}",
+				"classification":"",
+				"psced_classification":"",
+				"author":"",
+				"conference":"",
+				"publication":"",
+				"budget_min":"",
+				"budget_max":"",
+				"collaborator":"",
+				"is_filtered":"true",
+		};
 
 		function initRecordsTbl(){
 			recordsTbl = $('#tbl-records').DataTable({
@@ -75,6 +87,7 @@
 
 //------------------------on filter save-----------------------------------------------------
 		$("#btn-filter-save").on("click", function(){
+			$("#filter-tags").html('Filters: ');
 			filters = {
 				"year_from":"",
 				"year_to":"",
@@ -91,24 +104,34 @@
 			if($("#year_cb").is(":checked")){
 				filters['year_from'] = $("#year_from").val();
 				filters['year_to']= $("#year_to").val();
+				$("#filter-tags").append('<div class="badge badge-success">Year='+filters['year_from']+' - '+filters['year_to']+'</div>&nbsp;');
 			}
 			filters['classification']=$("#id_classification").val();
+			if(filters['classification']!='')
+				$("#filter-tags").append('<div class="badge badge-success">Classification='+filters['classification']+'</div>&nbsp;');
 			filters['psced_classification']=$("#id_psced_classification").val();
+			if(filters['psced_classification']!='')
+				$("#filter-tags").append('<div class="badge badge-success">PSCED Classification='+filters['psced_classification']+'</div>&nbsp;');
 			if($("#author_cb").is(":checked")){
 				filters["author"]=$("#author").val();
+				$("#filter-tags").append('<div class="badge badge-success">Author='+filters['author']+'</div>&nbsp;');
 			}
 			if($("#conference_cb").is(":checked")){
 				filters["conference"]=$("#conference").val();
+				$("#filter-tags").append('<div class="badge badge-success">Conference='+filters['conference']+'</div>&nbsp;');
 			}
 			if($("#publication_cb").is(":checked")){
 				filters['publication']=$("#publication").val();
+				$("#filter-tags").append('<div class="badge badge-success">Publication='+filters['publication']+'</div>&nbsp;');
 			}
 			if($("#budget_cb").is(":checked")){
 				filters['budget_min']=$("#budget_min").val();
 				filters['budget_max']=$("#budget_max").val();
+				$("#filter-tags").append('<div class="badge badge-success">Budget='+filters['budget_min']+' - '+filters['budget_max']+'</div>&nbsp;');
 			}
 			if($("#collaborator_cb").is(":checked")){
 				filters['collaborator']=$("#collaborator").val();
+				$("#filter-tags").append('<div class="badge badge-success">Collaborator='+filters['collaborator']+'</div>&nbsp;');
 			}
 			filters['is_filtered']=true;
 			recordsTbl.clear().destroy();
@@ -304,6 +327,11 @@
 							</div>
 						</div>
 					</div>
+					<div class="row">
+						<div class="col-md-12" id="filter-tags">
+							Filters: <div class="badge badge-success">{{ year_from }} - {{ year_to }}</div>
+						</div>
+					</div>
 
 					<div class="row" style="margin-top:20px">
 						<div class="col-12">
@@ -424,17 +452,17 @@ section with the new entry.</li>
 					<div class="row">
 						<div class="col-lg-5">
 							<div class="form-check">
-							  <input class="form-check-input" type="checkbox" id="year_cb" name="year_cb" {% if filters.year_from is not None and filters.year_to is not None %} checked {% endif %}>
+							  <input class="form-check-input" type="checkbox" id="year_cb" name="year_cb" checked>
 							  <label class="form-check-label" for="year_cb">
 							    Year
 							  </label>
 							</div>
 						</div>
 						<div class="col-lg-3">
-							<input class="form-control" placeholder="from" id="year_from" name="year_from" value="{{ filters.year_from }}">
+							<input class="form-control" placeholder="from" id="year_from" name="year_from" value="{{ year_from }}">
 						</div>
 						<div class="col-lg-3">
-							<input class="form-control" placeholder="to" id="year_to" name="year_to" value="{{ filters.year_to }}">
+							<input class="form-control" placeholder="to" id="year_to" name="year_to" value="{{ year_to }}">
 						</div>
 					</div>
 					<div class="row">
@@ -476,14 +504,14 @@ section with the new entry.</li>
 					<div class="row" style="margin-top:10px">
 						<div class="col-lg-5">
 							<div class="form-check">
-							  <input class="form-check-input" type="checkbox" name="publication_cb" id="publication_cb" {% if filters.publication is not None %} checked {% endif %}>
+							  <input class="form-check-input" type="checkbox" name="publication_cb" id="publication_cb">
 							  <label class="form-check-label" for="publication_cb">
 							    Publication Name
 							  </label>
 							</div>
 						</div>
 						<div class="col-lg-7">
-							<input class="form-control" id="publication" name="publication" value="{{ filters.publication }}">
+							<input class="form-control" id="publication" name="publication">
 						</div>
 					</div>
 					<div class="row" style="margin-top:10px">

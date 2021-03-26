@@ -269,7 +269,7 @@
         </div>
         <div class="col-6">
             <div style="float: right;">
-                {% if not role_checked and user.role.pk > 2 and user.role.pk < 6 %}
+                {% if not role_checked and user.role.pk > 2 and user.role.pk != 6 %}
                     <a href="#" id="btn-approve">Approve</a> |
                     <a href="#" id="btn-decline">Decline</a> |
                 {% endif %}

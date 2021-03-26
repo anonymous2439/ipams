@@ -90,6 +90,8 @@ class Home(View):
             'login_form': LoginForm(),
             'user_roles': user_roles,
             'logs': logs,
+            'year_from': datetime.datetime.now().year,
+            'year_to': datetime.datetime.now().year,
         }
         if logs != '':
             del request.session['logs']
@@ -139,8 +141,6 @@ class Home(View):
                     publications = Publication.objects.filter(name=publication_filter)
                     if len(publications) > 0:
                         records = records.filter(publication=publications.first())
-                    else:
-                        records = []
                 if budget_min_filter != "" or budget_max_filter != "":
                     min = 0
                     if budget_min_filter != "":
@@ -953,15 +953,18 @@ class Add(View):
                 owners = json.loads(request.POST.get('owners-id'))
                 adviser = json.loads(request.POST.get('adviser-id'))
                 record.adviser = User.objects.get(pk=adviser[0]['id'])
-                student = Student.objects.get(user=request.user)
-                record.representative = f'{student.user.first_name} {student.user.last_name}'
+            # Saving record code only if the role is student
+                if request.user.role == 2:
+                    student = Student.objects.get(user=request.user)
+                record.representative = f'{request.user.first_name} {request.user.last_name}'
                 record.save()
-                year = str(datetime.datetime.now().year)[2:]
-                serial = record.pk
-                college = student.course.department.college.code
-                department = student.course.department.code
-                record.code = f'{year}-{serial}-{college}-{department}-{student.user.last_name.upper()}'
-                record.save()
+                if request.user.role == 2:
+                    year = str(datetime.datetime.now().year)[2:]
+                    serial = record.pk
+                    college = student.course.department.college.code
+                    department = student.course.department.code
+                    record.code = f'{year}-{serial}-{college}-{department}-{student.user.last_name.upper()}'
+                    record.save()
                 # if the record type is proposal, the record will also be saved in the research group
                 if record.record_type.pk == 1:
                     ResearchRecord(proposal=record).save()
