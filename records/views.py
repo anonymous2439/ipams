@@ -954,11 +954,11 @@ class Add(View):
                 adviser = json.loads(request.POST.get('adviser-id'))
                 record.adviser = User.objects.get(pk=adviser[0]['id'])
             # Saving record code only if the role is student
-                if request.user.role == 2:
+                if request.user.role.pk == 2:
                     student = Student.objects.get(user=request.user)
                 record.representative = f'{request.user.first_name} {request.user.last_name}'
                 record.save()
-                if request.user.role == 2:
+                if request.user.role.pk == 2:
                     year = str(datetime.datetime.now().year)[2:]
                     serial = record.pk
                     college = student.course.department.college.code
