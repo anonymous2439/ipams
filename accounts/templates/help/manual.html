@@ -10,6 +10,9 @@
         .figures{
             background-color:gray;
         }
+        .sub-section{
+            margin-top:50px;
+        }
     </style>
     <div class="container-fluid" style="margin-top:100px;">
         <div class="row">
@@ -64,19 +67,19 @@
                         <section id="record-types">
                             <h4><b>Record Types</b></h4>
                             <p>There are 3 types of records for any record submitted:</p>
-                            <b id="record-types-1">Proposal</b>
+                            <div class="sub-section"><b id="record-types-1">Proposal</b></div>
                             <p>
                                 -Records that are to be proposed to the advisers. This is a pre-requisite for "Thesis/Research" record type<br>
                                 -Can be created by any non-guest users
                             </p>
-                            <b id="record-types-2">Thesis/Research</b>
+                            <div class="sub-section"><b id="record-types-2">Thesis/Research</b></div>
                             <p>
                                 -Must have submitted a proposal already.<br>
 -This is automatically grouped together with the "Proposal" record so that you can easily navigate from "Proposal" to "Thesis/Research" or vise versa<br>
 -Only the owners of the record with "Proposal" record type can add a new record with "Thesis/Research" record type<br>
 -Users can only add the "Thesis/Research" record type from the opened "Proposal" record
                             </p>
-                            <b id="record-types-3">Project</b>
+                            <div class="sub-section"><b id="record-types-3">Project</b></div>
                             <p>
                                 -Other records<br>
 -Can be created by any non-guest users
@@ -104,7 +107,7 @@
                         <section id="managing-records">
                             <h4><b>Managing Records</b></h4>
                             <p>
-                                <b id="managing-records-1">Adding Records</b>
+                                <div class="sub-section"><b id="managing-records-1">Adding Records</b></div>
                                 <p>
                                     Note: guest users are not permitted to add a record<br>
                                     There are 2 ways to add a record:<br>
@@ -121,7 +124,7 @@
                                             <label class="text-muted">Figure 3</label>
                                     </ul>
                                 </p>
-                                <b id="managing-records-2">Migrating records from spreadsheet</b>
+                                <div class="sub-section"><b id="managing-records-2">Migrating records from spreadsheet</b></div>
                                 <p>
                                     <ol>
                                         <li>Follow the data entry format which can be viewed <a href="{% url 'records-download-format' %}">HERE</a>.</li>
@@ -134,7 +137,7 @@
                                         Note that records added from spreadsheet are automatically categorized as "project" (See <a href="#record-types">Record Types</a> for more info). There is currently no default code for records migrated from spreadsheet as some information like "Department" is not known. However, you can manually edit the code from the "Dashboard / Manage records" table by clicking the pen symbol beside the code
                                     </p>
                                 </p>
-                                <b id="managing-records-3">Editting Records</b>
+                                <div class="sub-section"><b id="managing-records-3">Editting Records</b></div>
                                 <p>
                                     <ul>
                                         <li>You can edit your own records by accessing the record from the profile menus "My records". Take note that the record can only be edited if the record hasn't been approved by any authorized users yet.</li>
@@ -144,7 +147,7 @@
                                             <label class="text-muted">Figure 4</label>
                                     </ul>
                                 </p>
-                                <b id="managing-records-4">Deleting Records</b>
+                                <div class="sub-section"><b id="managing-records-4">Deleting Records</b></div>
                                 <p>
                                     <ul>
                                         <li>if the record is approved, the record can no longer be deleted</li>
@@ -152,7 +155,7 @@
                                         <p>See "Figure 4" on how to delete a record</p>
                                     </ul>
                                 </p>
-                                <b id="managing-records-5">Viewing Records</b>
+                                <div class="sub-section"><b id="managing-records-5">Viewing Records</b></div>
                                     <p>
                                         <ul>
                                             <li>Records shown from the homepage are records that are approved by RDCO</li>
@@ -175,7 +178,7 @@
                                         </ul>
                                     </p>
                                 </p>
-                                <b id="managing-records-6">Record comments</b>
+                                <div class="sub-section"><b id="managing-records-6">Record comments</b></div>
                                     <p>
                                         A record comment is a comment saved on a record after the record is reviewed.
 
@@ -193,7 +196,7 @@
                                         </ul>
                                     </p>
                                 </p>
-                                <b id="managing-records-7">Resubmit a record</b>
+                                <div class="sub-section"><b id="managing-records-7">Resubmit a record</b></div>
                                     <p>
                                         When a record has been declined, you have the option to edit, remove or resubmit the record when selecting a record from the '<a href="#profile-records-1">My records</a>' section. Resubmitting a record means the declined status of the last user who checked the record will revert back to 'pending' status for the appropriate user to recheck your record
 
@@ -203,7 +206,7 @@
                                         </div>
                                         <label class="text-muted">Figure 10</label>
                                     </p>
-                                <b id="managing-records-8">Viewing owner's details</b>
+                                <div class="sub-section"><b id="managing-records-8">Viewing owner's details</b></div>
                                     <p>
                                         To view the owner's details, go to "Dashboard / <a href="#dashboard-1">Manage records</a>" and select a record. From the "Owners" label, click on the owner you wish to view the details
 
@@ -218,7 +221,7 @@
                         <section id="managing-documents">
                             <h4><b>Managing Documents</b></h4>
                             <p>Documents are requirements of a record which can be uploaded with the record or uploaded later by editting the record</p>
-                            <b id="managing-documents-1">Uploading documents</b>
+                            <div class="sub-section"><b id="managing-documents-1">Uploading documents</b></div>
                             <ul>
                                 <li>Only 1 document can be uploaded per requirements</li>
                                 <li>Uploading into a requirements which already has an existing file will re-write the existing file</li>
@@ -227,7 +230,7 @@
                                     </div>
                                     <label class="text-muted">Figure 12</label>
                             </ul>
-                            <b id="managing-documents-2">Document status</b>
+                            <div class="sub-section"><b id="managing-documents-2">Document status</b></div>
                             <p>
                                 These are currently the status a document can have after a certain user has reviewed the document:
                                 <ol>
@@ -247,7 +250,7 @@
                                     <a href="{% static 'images/manual/man11.png' %}"><img src="{% static 'images/manual/man11.png' %}" width="300px"></a>
                                 </div>
                                 <label class="text-muted">Figure 13</label><br>
-                            <b id="profile-records-1">My records</b>
+                            <div class="sub-section"><b id="profile-records-1">My records</b></div>
                             <p>
                                 Shows the records you owned or submitted
                                 <ul>
@@ -258,7 +261,7 @@
                                         <label class="text-muted">Figure 14</label><br>
                                 </ul>
                             </p>
-                            <b id="profile-records-2">Pending</b>
+                            <div class="sub-section"><b id="profile-records-2">Pending</b></div>
                             <p>
                                 These are the records which is submitted to you that you must review
                                 <ul>
@@ -273,13 +276,13 @@
                                 </div>
                                 <label class="text-muted">Figure 15</label><br>
                             </p>
-                            <b id="profile-records-3">Approved</b>
+                            <div class="sub-section"><b id="profile-records-3">Approved</b></div>
                             <p>These are the list of records that you approved</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man14.png' %}"><img src="{% static 'images/manual/man14.png' %}" width="1000px"></a>
                                 </div>
                                 <label class="text-muted">Figure 16</label><br>
-                            <b id="profile-records-4">Declined</b>
+                            <div class="sub-section"><b id="profile-records-4">Declined</b></div>
                             <p>These are the list of records that you declined</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man15.png' %}"><img src="{% static 'images/manual/man15.png' %}" width="1000px"></a>
@@ -306,7 +309,7 @@
 <!-- ---------------------------------------------USER ACCOUNTS--------------------------------------------------------- -->
                         <section id="user-accounts">
                             <h4><b>User Accounts</b></h4>
-                            <b id="user-accounts-1">Login</b><br>
+                            <div class="sub-section"><b id="user-accounts-1">Login</b><br></div>
                             <ul>
                                 <li>There is no restrictions on login as of the moment</li>
                                 <li>A success popup will show when you are successfully logged in</li>
@@ -325,7 +328,7 @@
                                     <a href="{% static 'images/manual/man18.png' %}"><img src="{% static 'images/manual/man18.png' %}" width="1000px"></a>
                                 </div>
                                 <label class="text-muted">Figure 20</label><br>
-                            <h5><b id="user-accounts-2">Roles</b></h5>
+                            <div class="sub-section"><h5><b id="user-accounts-2">Roles</b></h5></div>
                             <b>Unregistered Guest</b>
                             <p>Are users who viewed the website but not registered</p>
                             <b>Registered Guest</b>
@@ -343,7 +346,7 @@
                             <b>TBI</b>
                             <p>Same functionalities as the KTTO and can review records the same way as the KTTO</p>
 
-                            <h5 id="user-accounts-3"><b>Access Control</b></h5>
+                            <div class="sub-section"><h5 id="user-accounts-3"><b>Access Control</b></h5></div>
                             <b>Can add, edit or remove records that has not yet been approved by any authorized users</b>
                              <ul>
                                  <li>Student, Adviser, ITSO, KTTO, RDCO</li>
@@ -381,7 +384,7 @@
                                     <a href="{% static 'images/manual/man19.png' %}"><img src="{% static 'images/manual/man19.png' %}" width="1000px"></a>
                                 </div>
                             <label class="text-muted">Figure 21</label><br>
-                            <b id="dashboard-1">Manage Records</b>
+                            <div class="sub-section"><b id="dashboard-1">Manage Records</b></div>
                             <p>Here is where you can remove or view all submitted records. Filtering records is different here compare to the homepage</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man20.png' %}"><img src="{% static 'images/manual/man20.png' %}" width="1000px"></a>
@@ -393,13 +396,13 @@
                                     <a href="{% static 'images/manual/man21.png' %}"><img src="{% static 'images/manual/man21.png' %}" width="1000px"></a>
                                 </div>
                                 <label class="text-muted">Figure 23</label><br>
-                            <b id="dashboard-3">Manage Accounts</b>
+                            <div class="sub-section"><b id="dashboard-3">Manage Accounts</b></div>
                             <p>Same functionalities as the Accounts tab from the homepage. This is where you can change the <a href="#roles">roles</a> of the users</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man22.png' %}"><img src="{% static 'images/manual/man22.png' %}" width="1000px"></a>
                                 </div>
                                 <label class="text-muted">Figure 24</label><br>
-                            <b id="dashboard-4">Logs</b>
+                            <div class="sub-section"><b id="dashboard-4">Logs</b></div>
                             <p>This is where some user activities are recorded and monitored</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man23.png' %}"><img src="{% static 'images/manual/man23.png' %}" width="1000px"></a>
