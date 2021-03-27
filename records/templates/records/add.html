@@ -170,6 +170,11 @@
 				alert("error");
 			}
 		});
+
+		// for tooltip
+    	$('#div_id_title > label').attr("data-bs-toggle", "tooltip");
+    	//$('#div_id_title > label').attr("title", "Title of Presentation");
+    	$('[data-bs-toggle="tooltip"]').tooltip({'delay': { show: 0, hide: 1000 }});
     });
 
     $("#record_type3").on("click", function(){

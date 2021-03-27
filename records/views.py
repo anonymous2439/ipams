@@ -181,7 +181,7 @@ class Home(View):
             return JsonResponse({"data": data})
 
 
-# table
+# Manage documents table
 class ViewManageDocuments(View):
     name = 'records/dashboard/manage_documents.html'
     record_uploads = RecordUpload.objects.all()
@@ -218,6 +218,7 @@ class ViewManageDocuments(View):
                 return JsonResponse({"data": data})
 
 
+# Manage documents template
 class ViewManageDocumentsRecord(View):
     name = 'records/dashboard/manage_documents_record.html'
     author_roles = AuthorRole.objects.all()
@@ -1851,6 +1852,7 @@ class ViewManageRecords(View):
             return JsonResponse({'data': data})
 
 
+# Dashboard manage record template
 class DashboardManageRecord(View):
     name = 'records/dashboard/manage_view_record.html'
     author_roles = AuthorRole.objects.all()
@@ -1879,6 +1881,10 @@ class DashboardManageRecord(View):
     @method_decorator(authorized_record_user())
     def get(self, request, record_id):
         owners = UserRecord.objects.filter(record=Record.objects.get(pk=record_id))
+        for owner in owners:
+            if owner.user.role.pk == 2:
+                student = Student.objects.get(user=owner.user)
+                owner.student = student
         self.context['owners'] = owners
         checked_records = CheckedRecord.objects.filter(record=Record.objects.get(pk=record_id))
         adviser_checked = {'status': 'pending'}

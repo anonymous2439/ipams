@@ -199,12 +199,28 @@
             });
         }
 
-
-
         $("#btn-uploads-back").on("click", function(){
             $("#uploads").show();
             $("#uploads-title").hide();
         });
+
+        function userInfo(id){
+            {% for owner in owners %}
+                if({{ owner.user.pk }} == id){
+                    $("#user-info-name").val("{{ owner.user.first_name }} {{ owner.user.middle_name}} {{ owner.user.last_name}}");
+                    $("#user-info-email").val("{{ owner.user.email }}");
+                    $("#user-info-contact").val("{{ owner.user.contact_no}}");
+                    $("#user-info-role").val("{{ owner.user.role }}");
+                    {% if owner.user.role.pk == 2 %}
+                        $("#user-info-course").val("{{ owner.student.course.name }}");
+                        $("#user-info-group-course").show();
+                    {% else %}
+                        $("#user-info-group-course").hide();
+                    {% endif %}
+                }
+            {% endfor %}
+            $("#user-info-modal").modal("show");
+        }
 	</script>
 {% endblock %}
 
@@ -250,9 +266,9 @@
             <br><b>Owners:</b>
             {% for owner in owners %}
                 {% if forloop.first %}
-                    {{ owner.user.username }}
+                    <a href="#" onclick="userInfo({{ owner.user.pk }})">{{ owner.user.username }}</a>
                 {% else %}
-                    ,{{ owner.user.username }}
+                    <a href="#" onclick="userInfo({{ owner.user.pk }})">,{{ owner.user.username }}</a>
                 {% endif %}
             {% endfor %}
             <br><b>Date Submitted:</b> {{ record.date_created }}
@@ -433,6 +449,48 @@
                         <div class="col-12">
                             <textarea id="checked-status-comment" class="form-control" rows="6" readonly>
                             </textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="user-info-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header base-bg-primary">
+                <h5 class="modal-title" id="user-info-title">User Details</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    <div id="user-info-group">
+                        <div class="form-group">
+                            <label>Name: </label>
+                            <input id="user-info-name" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>E-mail: </label>
+                            <input id="user-info-email" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Contact: </label>
+                            <input id="user-info-contact" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Role: </label>
+                            <input id="user-info-role" class="form-control" readonly>
+                        </div>
+                        <div class="form-group" id="user-info-group-course" style="display:None">
+                            <label>Course: </label>
+                            <input id="user-info-course" class="form-control" readonly>
                         </div>
                     </div>
                 </div>

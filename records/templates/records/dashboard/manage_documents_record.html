@@ -249,11 +249,11 @@
             <br><b>Adviser:</b> {{ record.adviser.username }}
             <br><b>Owners:</b>
             {% for owner in owners %}
-            {% if forloop.first %}
-            {{ owner.user.username }}
-            {% else %}
-            ,{{ owner.user.username }}
-            {% endif %}
+                {% if forloop.first %}
+                    <a>{{ owner.user.username }}</a>
+                {% else %}
+                    <a>,{{ owner.user.username }}</a>
+                {% endif %}
             {% endfor %}
             <br><b>Date Submitted:</b> {{ record.date_created }}
             <br>
