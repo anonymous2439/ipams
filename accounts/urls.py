@@ -12,4 +12,5 @@ urlpatterns = [
     path('help/', views.HelpView.as_view(), name='accounts-help'),
     path('manual/', views.ManualView.as_view(), name='accounts-manual'),
     path('password/change', views.change_password, name='accounts-change-password'),
+    path('profile/pending/count', views.get_pending_count, name='accounts-get-pending-count'),
 ]

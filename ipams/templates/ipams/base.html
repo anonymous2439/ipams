@@ -251,7 +251,7 @@
                             <h6 class="dropdown-header"><i class="fa fa-book"></i> Records</h6>
                             <a class="dropdown-item" href="{% url 'records-myrecords' %}">My records</a>
                             {% if user.role.id > 2 and user.role.id < 6 or user.role.id == 7 %}
-                            <a class="dropdown-item" href="{% url 'records-pending' %}">Pending</a>
+                            <a class="dropdown-item" href="{% url 'records-pending' %}" id="profile-pending">Pending</a>
                             <a class="dropdown-item" href="{% url 'records-approved' %}">Approved</a>
                             <a class="dropdown-item" href="{% url 'records-declined' %}">Declined</a>
                             {% endif %}
@@ -500,6 +500,20 @@
         {% endif %}
 
 
+        {% if user.role.id > 2 and user.role.id < 6 or user.role.id == 7 %}
+            $.ajax({
+               	headers: { "X-CSRFToken": '{{ csrf_token }}' },
+               	url: "{% url 'accounts-get-pending-count' %}",
+               	type: "post",
+		    	success: function(data){
+		    	    if(data['pending-count'] > 0)
+		    	        $("#profile-pending").html('Pending <div class="badge badge-warning">'+data['pending-count']+'</div>');
+		    	},
+		    	error: function(data){
+		    		alert("error");
+		    	}
+            });
+        {% endif %}
     </script>
 
     {% block footer %}{% endblock %}

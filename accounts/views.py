@@ -2,6 +2,7 @@ import json
 
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout as auth_logout
+from django.db import connection
 from django.http import JsonResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.views import View
@@ -166,6 +167,24 @@ def save_profile(request):
             user.contact_no = contact_no
         user.save()
     return JsonResponse({'message': 'success'})
+
+
+@authorized_roles(roles=['adviser', 'ktto', 'rdco', 'tbi'])
+def get_pending_count(request):
+    if request.method == 'POST':
+        if request.user.role.id == 3:
+            with connection.cursor() as cursor:
+                cursor.execute(f"select records_record.id, records_record.title, records_checkedrecord.checked_by_id from records_record left join records_checkedrecord on records_record.id = records_checkedrecord.record_id where checked_by_id is null and records_record.adviser_id = {request.user.pk}")
+                rows = cursor.fetchall()
+        elif request.user.role.id == 4 or request.user.role.id == 7:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 3 AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 4 or accounts_user.role_id = 7)")
+                rows = cursor.fetchall()
+        elif request.user.role.id == 5:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT records_record.id, records_record.title FROM records_record INNER JOIN records_checkedrecord ON records_record.id = records_checkedrecord.record_id INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE (accounts_user.role_id = 4 OR accounts_user.role_id = 7) AND records_checkedrecord.status = 'approved' AND records_record.id NOT IN (SELECT records_checkedrecord.record_id FROM records_checkedrecord INNER JOIN accounts_user ON records_checkedrecord.checked_by_id = accounts_user.id WHERE accounts_user.role_id = 5)")
+                rows = cursor.fetchall()
+        return JsonResponse({"pending-count": len(rows)})
 
 
 class HelpView(View):
