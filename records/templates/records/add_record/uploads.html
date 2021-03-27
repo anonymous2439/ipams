@@ -29,7 +29,7 @@
 				{{ upload.name }}
 			</div>
 			<div class="col-3 d-flex justify-content-end">
-				<input type="file" name="upload-{{ upload.pk }}">
+				<input type="file" name="upload-{{ upload.pk }}" onchange="validateDocument(this)">
 			</div>
 		</div>
 		<hr>
@@ -45,7 +45,7 @@
 			{{ upload.name }}
 		</div>
 		<div class="col-3 d-flex justify-content-end">
-			<input type="file" name="upload-{{ upload.pk }}">
+			<input type="file" name="upload-{{ upload.pk }}" onchange="validateDocument(this)">
 		</div>
 	</div>
 	{% endif %}

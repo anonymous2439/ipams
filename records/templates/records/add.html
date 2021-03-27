@@ -189,6 +189,36 @@
     		$("#btn-record-submit").hide();
     });
 
+    $("#id_abstract_file").on("change", function(){
+    	var fileInput = document.getElementById("id_abstract_file");
+    	var filePath = fileInput.value;
+    	var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif|\.zip|\.rar)$/i;
+    	if(!allowedExtensions.exec(filePath)){
+			Swal.fire(
+			 		  'File format not allowed!',
+			 		  'Accepted file formats are: .jpg | .jpeg, | .png | .gif | .zip | .rar',
+			 		  'error'
+			 		)
+    		fileInput.value = '';
+    		return false;
+    	}
+    });
+
+    function validateDocument(sel){
+    	var fileInput = sel
+    	var filePath = fileInput.value;
+    	var allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+    	if(!allowedExtensions.exec(filePath)){
+			Swal.fire(
+			 		  'File format not allowed!',
+			 		  'Accepted file formats are: .jpg | .jpeg, | .png | .gif',
+			 		  'error'
+			 		)
+    		fileInput.value = '';
+    		return false;
+    	}
+    }
+
 </script>
 
 {% endblock %}
