@@ -1823,6 +1823,13 @@ class ViewManageRecords(View):
                     del_record.delete()
                 return JsonResponse({'success': True})
 
+            # Edit record code
+            elif request.POST.get('edit-record-code', 'false') == 'true':
+                record = Record.objects.get(pk=request.POST.get('record-id', None))
+                record_code = request.POST.get('record-code', None)
+                record.code=record_code
+                record.save()
+
             for record in records:
                 tags = ''
                 if record.is_ip:
@@ -1834,7 +1841,7 @@ class ViewManageRecords(View):
                 data.append([
                     '',
                     record.pk,
-                    record.code,
+                    f'{record.code} <a href="#" onclick="editCode({record.pk},\'{record.code}\')"><i class="fa fa-pen fa-md"></i></a>',
                     f'<a href="/dashboard/manage/records/{record.pk}">{record.title}</a>',
                     record.record_type.name,
                     record.date_created.strftime("%Y-%m-%d %H:%M:%S"),
