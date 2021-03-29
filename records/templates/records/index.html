@@ -169,26 +169,39 @@
 
 //---------------------------account action button-----------------------------------
 	function acceptRole(id, roleId){
-		var account="&role-change=true&accounts[]="+id;
-		var role="&role-radio="+roleId;
-		$.ajax({
-           	headers: { "X-CSRFToken": '{{ csrf_token }}' },
-           	url: "{% url 'records-index' %}",
-           	type: "post",
-			data: $("#form-change-role").serialize()+account+role,
-			success: function(data){
-				$("#accounts-role-modal").modal("hide");
-				accountsTbl.ajax.reload();
-				Swal.fire(
-				 		  'Role Changed!',
-				 		  'The selected accounts role have been changed',
-				 		  'success'
-				 		)
-			},
-			error: function(data){
-				alert("error");
-			}
-        });
+
+		Swal.fire({
+		  title: 'Do you accept this role request?',
+		  showDenyButton: true,
+		  showCancelButton: true,
+		  confirmButtonText: `Accept`,
+		  denyButtonText: `Don't accept`,
+		}).then((result) => {
+		  if (result.value) {
+		    Swal.fire('Saved!', '', 'success')
+			var account="&role-change=true&accounts[]="+id;
+			var role="&role-radio="+roleId;
+			$.ajax({
+        	   	headers: { "X-CSRFToken": '{{ csrf_token }}' },
+        	   	url: "{% url 'records-index' %}",
+        	   	type: "post",
+				data: $("#form-change-role").serialize()+account+role,
+				success: function(data){
+					$("#accounts-role-modal").modal("hide");
+					accountsTbl.ajax.reload();
+					Swal.fire(
+					 		  'Role Changed!',
+					 		  'The selected accounts role have been changed',
+					 		  'success'
+					 		)
+				},
+				error: function(data){
+					alert("error");
+				}
+        	});
+		  }
+		})
+
 	}
 	$("#btn-account-go").on("click", function(){
 		var accountsAction = $("#select-account-action").val();

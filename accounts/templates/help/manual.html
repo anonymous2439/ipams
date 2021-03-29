@@ -34,10 +34,11 @@
                          <a href="#managing-records-2">Migrating records from spreadsheet</a><br>
                          <a href="#managing-records-3">Editting records</a><br>
                          <a href="#managing-records-4">Deleting records</a><br>
-                         <a href="#managing-records-5">Viewing records</a><br>
-                         <a href="#managing-records-6">Record comments</a><br>
-                         <a href="#managing-records-7">Resubmit a record</a><br>
-                         <a href="#managing-records-8">Viewing owner's details</a><br>
+                         <a href="#managing-records-5">Approving records</a><br>
+                         <a href="#managing-records-6">Viewing records</a><br>
+                         <a href="#managing-records-7">Record comments</a><br>
+                         <a href="#managing-records-8">Resubmit a record</a><br>
+                         <a href="#managing-records-9">Viewing owner's details</a><br>
                         <li><a href="#managing-documents"><b>Managing documents</b></a></li>
                          <a href="#managing-documents-1">Uploading documents</a><br>
                          <a href="#managing-documents-2">Document status</a><br>
@@ -121,7 +122,7 @@
                                             <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                                 <a href="{% static 'images/manual/man3.png' %}"><img src="{% static 'images/manual/man3.png' %}" width="1000px"></a>
                                             </div>
-                                            <label class="text-muted">Figure 3</label>
+                                            <label class="text-muted">Figure 2.1</label>
                                     </ul>
                                 </p>
                                 <div class="sub-section"><b id="managing-records-2">Migrating records from spreadsheet</b></div>
@@ -144,7 +145,7 @@
                                             <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                                 <a href="{% static 'images/manual/man4.png' %}"><img src="{% static 'images/manual/man4.png' %}" width="1000px"></a>
                                             </div>
-                                            <label class="text-muted">Figure 4</label>
+                                            <label class="text-muted">Figure 2.2</label>
                                     </ul>
                                 </p>
                                 <div class="sub-section"><b id="managing-records-4">Deleting Records</b></div>
@@ -152,51 +153,59 @@
                                     <ul>
                                         <li>if the record is approved, the record can no longer be deleted</li>
                                         <li>if the record is declined or is not yet approved, the record can be deleted</li>
-                                        <p>See "Figure 4" on how to delete a record</p>
+                                        <p>See "Figure 2.2" on how to delete a record</p>
                                     </ul>
                                 </p>
-                                <div class="sub-section"><b id="managing-records-5">Viewing Records</b></div>
+                                <div class="sub-section"><b id="managing-records-5">Approving Records</b></div>
+                                <p>
+                                    <ul>
+                                        <li>Records can only be approved by selecting a record from the <a href="#profile-records-2">Pending records</a> section</li>
+                                        <li>Records can ony be approved once by the adviser, KTTO/TBI and RDCO</li>
+                                        <li>Approved records are automatically removed from the <a href="#profile-records-2">Pending records</a> section and are transferred to the <a href="#profile-records-3">Approved records</a> section</li>
+                                    </ul>
+                                </p>
+                                <div class="sub-section"><b id="managing-records-6">Viewing Records</b></div>
                                     <p>
                                         <ul>
                                             <li>Records shown from the homepage are records that are approved by RDCO</li>
                                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                                     <a href="{% static 'images/manual/man5.png' %}"><img src="{% static 'images/manual/man5.png' %}" width="1000px"></a>
                                                 </div>
-                                                <label class="text-muted">Figure 5</label>
+                                                <label class="text-muted">Figure 2.3</label>
                                             <li>Records from the homepage can only be opened by registered users</li>
                                             <li>You can also view records from the list of records you submitted inside your profile menus "My records" section</li>
                                             <li>If you are inside a "proposal" and you haven't created a "Thesis/Research" yet, you may create one by selecting "New Record(Research)" beside the proposal link</li>
                                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                                     <a href="{% static 'images/manual/man6.png' %}"><img src="{% static 'images/manual/man6.png' %}" width="1000px"></a>
                                                 </div>
-                                                <label class="text-muted">Figure 6</label>
+                                                <label class="text-muted">Figure 2.4</label>
                                             <li>You may navigate to "Proposal" or "Thesis/Research" record when inside one of the 2 records</li>
                                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                                     <a href="{% static 'images/manual/man7.png' %}"><img src="{% static 'images/manual/man7.png' %}" width="1000px"></a>
                                                 </div>
-                                                <label class="text-muted">Figure 7</label>
+                                                <label class="text-muted">Figure 2.5</label>
                                         </ul>
                                     </p>
                                 </p>
-                                <div class="sub-section"><b id="managing-records-6">Record comments</b></div>
+                                <div class="sub-section"><b id="managing-records-7">Record comments</b></div>
                                     <p>
                                         A record comment is a comment saved on a record after the record is reviewed.
 
                                         <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                             <a href="{% static 'images/manual/man8.png' %}"><img src="{% static 'images/manual/man8.png' %}" width="1000px"></a>
                                         </div>
-                                        <label class="text-muted">Figure 8</label>
+                                        <label class="text-muted">Figure 2.6</label>
                                         <ul>
                                             <li>There can only be 1 comment per reviewer: Adviser, KTTO/TBI and RDCO.</li>
                                             <li>Comments can be seen when you clicked on a status inside a record from "My records" section under profile menu</li>
                                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                                     <a href="{% static 'images/manual/man9.png' %}"><img src="{% static 'images/manual/man9.png' %}" width="1000px"></a>
                                                 </div>
-                                                <label class="text-muted">Figure 9</label>
+                                                <label class="text-muted">Figure 2.7</label>
                                         </ul>
                                     </p>
                                 </p>
-                                <div class="sub-section"><b id="managing-records-7">Resubmit a record</b></div>
+                                <div class="sub-section"><b id="managing-records-8">Resubmit a record</b></div>
                                     <p>
                                         When a record has been declined, you have the option to edit, remove or resubmit the record when selecting a record from the '<a href="#profile-records-1">My records</a>' section. Resubmitting a record means the declined status of the last user who checked the record will revert back to 'pending' status for the appropriate user to recheck your record
 
@@ -204,16 +213,16 @@
                                         <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                             <a href="{% static 'images/manual/man24.png' %}"><img src="{% static 'images/manual/man24.png' %}" width="1000px"></a>
                                         </div>
-                                        <label class="text-muted">Figure 10</label>
+                                        <label class="text-muted">Figure 2.8</label>
                                     </p>
-                                <div class="sub-section"><b id="managing-records-8">Viewing owner's details</b></div>
+                                <div class="sub-section"><b id="managing-records-9">Viewing owner's details</b></div>
                                     <p>
                                         To view the owner's details, go to "Dashboard / <a href="#dashboard-1">Manage records</a>" and select a record. From the "Owners" label, click on the owner you wish to view the details
 
                                         <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                             <a href="{% static 'images/manual/man25.png' %}"><img src="{% static 'images/manual/man25.png' %}" width="1000px"></a>
                                         </div>
-                                        <label class="text-muted">Figure 11</label>
+                                        <label class="text-muted">Figure 2.9</label>
                                     </p>
                         </section>
                         <hr>
@@ -228,7 +237,7 @@
                                     <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                         <a href="{% static 'images/manual/man10.png' %}"><img src="{% static 'images/manual/man10.png' %}" width="1000px"></a>
                                     </div>
-                                    <label class="text-muted">Figure 12</label>
+                                    <label class="text-muted">Figure 3</label>
                             </ul>
                             <div class="sub-section"><b id="managing-documents-2">Document status</b></div>
                             <p>
@@ -249,7 +258,7 @@
                                 <div class="figures" style="width:300px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man11.png' %}"><img src="{% static 'images/manual/man11.png' %}" width="300px"></a>
                                 </div>
-                                <label class="text-muted">Figure 13</label><br>
+                                <label class="text-muted">Figure 4</label><br>
                             <div class="sub-section"><b id="profile-records-1">My records</b></div>
                             <p>
                                 Shows the records you owned or submitted
@@ -258,7 +267,7 @@
                                         <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                             <a href="{% static 'images/manual/man12.png' %}"><img src="{% static 'images/manual/man12.png' %}" width="1000px"></a>
                                         </div>
-                                        <label class="text-muted">Figure 14</label><br>
+                                        <label class="text-muted">Figure 4.1</label><br>
                                 </ul>
                             </p>
                             <div class="sub-section"><b id="profile-records-2">Pending</b></div>
@@ -274,20 +283,20 @@
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man13.png' %}"><img src="{% static 'images/manual/man13.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 15</label><br>
+                                <label class="text-muted">Figure 4.2</label><br>
                             </p>
                             <div class="sub-section"><b id="profile-records-3">Approved</b></div>
                             <p>These are the list of records that you approved</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man14.png' %}"><img src="{% static 'images/manual/man14.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 16</label><br>
+                                <label class="text-muted">Figure 4.3</label><br>
                             <div class="sub-section"><b id="profile-records-4">Declined</b></div>
                             <p>These are the list of records that you declined</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man15.png' %}"><img src="{% static 'images/manual/man15.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 17</label><br>
+                                <label class="text-muted">Figure 4.4</label><br>
                             <p></p>
                         </section>
                         <hr>
@@ -303,7 +312,7 @@
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man16.png' %}"><img src="{% static 'images/manual/man16.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 18</label><br>
+                                <label class="text-muted">Figure 5</label><br>
                         </section>
                         <hr>
 <!-- ---------------------------------------------USER ACCOUNTS--------------------------------------------------------- -->
@@ -318,7 +327,7 @@
                             <div class="figures" style="width:300px; height:500px; overflow-x:auto; overflow-y:auto;">
                                 <a href="{% static 'images/manual/man17.png' %}"><img src="{% static 'images/manual/man17.png' %}" width="300px"></a>
                             </div>
-                            <label class="text-muted">Figure 19</label><br>
+                            <label class="text-muted">Figure 6</label><br>
                             <b>Signup</b>
                             <ul>
                                 <li>You can request to be a student/adviser upon signing up or continue as a guest. fill-in all the required information and take note of your username as you have to present your username to the authorized user to upgrade your account</li>
@@ -327,7 +336,7 @@
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man18.png' %}"><img src="{% static 'images/manual/man18.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 20</label><br>
+                                <label class="text-muted">Figure 6.1</label><br>
                             <div class="sub-section"><h5><b id="user-accounts-2">Roles</b></h5></div>
                             <b>Unregistered Guest</b>
                             <p>Are users who viewed the website but not registered</p>
@@ -383,31 +392,31 @@
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man19.png' %}"><img src="{% static 'images/manual/man19.png' %}" width="1000px"></a>
                                 </div>
-                            <label class="text-muted">Figure 21</label><br>
+                            <label class="text-muted">Figure 7</label><br>
                             <div class="sub-section"><b id="dashboard-1">Manage Records</b></div>
                             <p>Here is where you can remove or view all submitted records. Filtering records is different here compare to the homepage</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man20.png' %}"><img src="{% static 'images/manual/man20.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 22</label><br>
+                                <label class="text-muted">Figure 7.1</label><br>
                             <b id="dashboard-2">Manage Documents</b>
                             <p>Here is where you can review all uploaded documents and change it's <a href="#managing-documents-2">Document status</a></p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man21.png' %}"><img src="{% static 'images/manual/man21.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 23</label><br>
+                                <label class="text-muted">Figure 7.2</label><br>
                             <div class="sub-section"><b id="dashboard-3">Manage Accounts</b></div>
                             <p>Same functionalities as the Accounts tab from the homepage. This is where you can change the <a href="#roles">roles</a> of the users</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man22.png' %}"><img src="{% static 'images/manual/man22.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 24</label><br>
+                                <label class="text-muted">Figure 7.3</label><br>
                             <div class="sub-section"><b id="dashboard-4">Logs</b></div>
                             <p>This is where some user activities are recorded and monitored</p>
                                 <div class="figures" style="width:1000px; height:500px; overflow-x:auto; overflow-y:auto;">
                                     <a href="{% static 'images/manual/man23.png' %}"><img src="{% static 'images/manual/man23.png' %}" width="1000px"></a>
                                 </div>
-                                <label class="text-muted">Figure 25</label><br>
+                                <label class="text-muted">Figure 7.4</label><br>
                         </section>
                         <hr>
                     </div>
