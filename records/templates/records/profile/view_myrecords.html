@@ -270,12 +270,12 @@
         <div class="col-6">
             <div style="float: right;">
                 {% if not role_checked and user.role.pk > 2 and user.role.pk != 6 %}
-                    <a href="#" id="btn-approve">Approve</a> |
-                    <a href="#" id="btn-decline">Decline</a> |
+                    <a href="#" id="btn-approve"><i class="fa fa-check fa-md"></i> Approve</a> |
+                    <a href="#" id="btn-decline"><i class="fa fa-times fa-md"></i> Decline</a> |
                 {% endif %}
                 {% if is_removable %}
-                    <a href="{% url 'records-edit' record_id=record.pk %}" id="btn-edit">Edit</a>
-                    &nbsp;|&nbsp;<a href="#" id="btn-remove">Remove</a>
+                    <a href="{% url 'records-edit' record_id=record.pk %}" id="btn-edit"><i class="fa fa-pen fa-md"></i> Edit</a>
+                    &nbsp;|&nbsp;<a href="#" id="btn-remove"><i class="fa fa-trash fa-md"></i> Remove</a>
                 {% endif %}
                 {% if adviser_checked.status == 'declined' or ktto_checked.status == 'declined' or rdco_checked.status == 'declined' %}
                     &nbsp;|&nbsp;<a href="#" id="btn-resubmit">Resubmit</a>
