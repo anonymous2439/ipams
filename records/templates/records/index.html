@@ -27,6 +27,9 @@
 		};
 
 		function initRecordsTbl(){
+			if(recordsTbl){
+				recordsTbl.clear().destroy();
+			}
 			recordsTbl = $('#tbl-records').DataTable({
 				"ajax":	{
 					headers: { "X-CSRFToken": '{{ csrf_token }}' },
@@ -51,6 +54,9 @@
 
 		function initAccountsTbl(){
 			{% if user.role.id > 2 %}
+			if(accountsTbl){
+				accountsTbl.clear().destroy();
+			}
 		    accountsTbl= $('#tbl-accounts').DataTable({
 		    	"ajax":	{
 		    		"headers": { "X-CSRFToken": '{{ csrf_token }}' },
@@ -82,8 +88,12 @@
 			{% endif %}
 		}
 
-		initRecordsTbl();
-		initAccountsTbl();
+		$("#nav-home-menu-2").on("click", function(){
+			initRecordsTbl();
+		});
+		$("#nav-home-menu-3").on("click", function(){
+			initAccountsTbl();
+		});
 
 //------------------------on filter save-----------------------------------------------------
 		$("#btn-filter-save").on("click", function(){
@@ -134,7 +144,6 @@
 				$("#filter-tags").append('<div class="badge badge-success">Collaborator='+filters['collaborator']+'</div>&nbsp;');
 			}
 			filters['is_filtered']=true;
-			recordsTbl.clear().destroy();
 			initRecordsTbl();
 		});
 

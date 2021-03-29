@@ -1,10 +1,10 @@
 <nav>
     <div class="nav nav-tabs" role="tablist">
-        <a class="col-lg-auto nav-item nav-link nav-main active" data-toggle="tab" href="#nav-home-landing" role="tab"><i class="fa fa-home fa-md"></i></a>
-        <a class="col-lg-auto col-lg-auto nav-item nav-link nav-main" data-toggle="tab" href="#nav-home-records" role="tab"><i class="fa fa-book fa-md"></i> RECORDS</a>
+        <a id="nav-home-menu-1" class="col-lg-auto nav-item nav-link nav-main active" data-toggle="tab" href="#nav-home-landing" role="tab"><i class="fa fa-home fa-md"></i></a>
+        <a id="nav-home-menu-2" class="col-lg-auto col-lg-auto nav-item nav-link nav-main" data-toggle="tab" href="#nav-home-records" role="tab"><i class="fa fa-book fa-md"></i> RECORDS</a>
         {% if user.role.id > 2 %}
-        <a class="col-lg-auto nav-item nav-link nav-main" data-toggle="tab" href="#nav-home-accounts" role="tab"><i class="fa fa-user fa-md"></i> ACCOUNTS</a>
-        <a class="col-lg-auto nav-item nav-link nav-main" data-toggle="tab" href="#nav-home-upload" role="tab"><i class="fa fa-upload fa-md"></i> UPLOAD</a>
+        <a id="nav-home-menu-3" class="col-lg-auto nav-item nav-link nav-main" data-toggle="tab" href="#nav-home-accounts" role="tab"><i class="fa fa-user fa-md"></i> ACCOUNTS</a>
+        <a id="nav-home-menu-4" class="col-lg-auto nav-item nav-link nav-main" data-toggle="tab" href="#nav-home-upload" role="tab"><i class="fa fa-upload fa-md"></i> UPLOAD</a>
         {% endif %}
     </div>
 </nav>
